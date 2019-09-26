@@ -9,6 +9,8 @@
 #include <QMessageBox>
 #include <QPrinter>
 #include <QPrintDialog>
+#include <QMdiArea>
+#include <QLabel>
 
 namespace Ui {
 class MainWindow;
@@ -23,8 +25,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionNew_triggered();
-
     void on_actionOpen_triggered();
 
     void on_actionSave_As_triggered();
@@ -33,7 +33,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QString currentFile = "";
+    QMdiArea * mdiArea;  // Area in which windows will be added
 };
 
 #endif // MAINWINDOW_H

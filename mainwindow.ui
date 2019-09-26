@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1200</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,11 +23,7 @@
       <height>221</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QTextEdit" name="textEdit"/>
-     </item>
-    </layout>
+    <layout class="QVBoxLayout" name="verticalLayout"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -35,7 +31,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>1200</width>
      <height>22</height>
     </rect>
    </property>
@@ -43,7 +39,6 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave_As"/>
     <addaction name="actionExit"/>
@@ -73,7 +68,6 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionNew"/>
    <addaction name="actionOpen"/>
    <addaction name="actionSave_As"/>
   </widget>
@@ -94,15 +88,6 @@
    </property>
    <property name="text">
     <string>Save As</string>
-   </property>
-  </action>
-  <action name="actionNew">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/img/img/New.bmp</normaloff>:/img/img/New.bmp</iconset>
-   </property>
-   <property name="text">
-    <string>New</string>
    </property>
   </action>
   <action name="actionExit">
