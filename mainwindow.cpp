@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "image.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <iostream>
@@ -46,9 +47,11 @@ void MainWindow::on_actionOpen_triggered()
     QLabel *label = new QLabel(widget);
 
     // IMPLEMENT READ FILE HEREE
-
-    QImage image(fileName);
-    label->setPixmap(QPixmap::fromImage(image));
+    QByteArray ba = fileName.toLocal8Bit();
+    char *c_str2 = ba.data();
+    Image *picture = new Image(c_str2);
+//    QImage image(fileName);
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
     gridLayout->addWidget(label);
 
     // Adding a widget as a sub window in the Mdi Area
