@@ -292,7 +292,14 @@ void Image::operation_bool(Image *secondImage, bool OR) {
         for (uint j = 0; j < w; ++j)
         {
             Rgba temp = pixels[i*w + j];
-            Rgba temp_second = secondImage->pixels[i*w + j];
+            Rgba temp_second;
+            (OR) ?
+            temp_second = Rgba(0, 0, 0, 0) :
+            temp_second = Rgba(255, 255, 255, 0);
+
+            if (i < secondImage->h && j < secondImage->w) {
+                temp_second = secondImage->pixels[i*w + j];
+            }
             Rgba bool_result;
             if (OR) {
                 bool_result = Rgba(
@@ -321,6 +328,29 @@ void Image::operation_not() {
             Rgba temp = pixels[i*w + j];
             Rgba not_result = Rgba(~temp.r, ~temp.g, ~temp.b, temp.a);
             pixels[i*w + j] = not_result;
+        }
+    }
+}
+
+
+void Image::operation_arithmetic(Image *secondImage) {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i*w + j];
+            Rgba temp_second(0, 0, 0, 0);
+
+            if (i < secondImage->h && j < secondImage->w) {
+                temp_second = secondImage->pixels[i*w + j];
+            }
+
+            Rgba bool_result = Rgba(
+                        (temp.r + temp_second.r) > 255 ? 255 : (temp.r + temp_second.r),
+                        (temp.r + temp_second.g) > 255 ? 255 : (temp.g + temp_second.g),
+                        (temp.r + temp_second.b) > 255 ? 255 : (temp.b + temp_second.b),
+                        (temp.r + temp_second.a) > 255 ? 255 : (temp.a + temp_second.a));
+            pixels[i*w + j] = bool_result;
         }
     }
 }

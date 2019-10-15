@@ -66,11 +66,12 @@
     </widget>
     <widget class="QMenu" name="menuBoolean">
      <property name="title">
-      <string>Boolean</string>
+      <string>Operation</string>
      </property>
      <addaction name="actionOR"/>
      <addaction name="actionAND"/>
      <addaction name="actionNOT"/>
+     <addaction name="actionADD"/>
     </widget>
     <addaction name="actionNegative"/>
     <addaction name="actionGrayscale"/>
@@ -168,6 +169,11 @@
   <action name="actionNOT">
    <property name="text">
     <string>NOT</string>
+   </property>
+  </action>
+  <action name="actionADD">
+   <property name="text">
+    <string>ADD</string>
    </property>
   </action>
  </widget>

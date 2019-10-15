@@ -52,6 +52,8 @@ private slots:
 
     void on_actionNOT_triggered();
 
+    void on_actionADD_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMdiArea * mdiArea;  // Area in which windows will be added

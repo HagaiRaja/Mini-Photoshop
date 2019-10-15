@@ -336,7 +336,32 @@ void MainWindow::on_actionNOT_triggered()
     // Adding a widget as a sub window in the Mdi Area
     mdiArea->addSubWindow(widget);
     // Set the window title
-    QString title_info("AND operation - ");
+    QString title_info("NOT operation - ");
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_actionADD_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    Image *second_picture = this->open_second_image();
+
+    picture->operation_arithmetic(second_picture);
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QString title_info("ADD operation - ");
     widget->setWindowTitle(title_info % fileTitle);
     // And show the widget
     widget->show();
