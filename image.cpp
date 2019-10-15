@@ -131,6 +131,43 @@ Image::Image(char* filename)
 //                        0);
 //        }
 //    }
+
+    // READ PBM
+    char* type = new char[2];
+    FILE* pbmFile = fopen(filename, "rb");
+
+    if (!strcmp(type, "P1\n")) {
+        char* dimension = new char [15];
+        fgets(dimension, sizeof(dimension), pbmFile);
+        int width = atoi(strtok(dimension, " "));
+        int height = atoi(strtok(NULL, " "));
+        cout << width << '\n';
+        cout << height << '\n';
+
+        uint size = width * height;
+        w = uint(width);
+        h = uint(height);
+        unsigned char *data = new unsigned char[size];
+        fread(data, sizeof(unsigned char), size, pbmFile);
+
+        pixels = new Rgba[w * h];
+        int temp;
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
+                temp = int(data[i*width + j]);
+                cout << temp << " ";
+                if (temp != 0) {
+                    pixels[i*width + j] = Rgba(255, 255, 255, 0);
+                }
+                else {
+                    pixels[i*width + g] = Rgba(0, 0, 0, 0);
+                }
+                fflush(stdout);
+            }
+            cout << endl;
+        }
+    }
+
 }
 
 QImage Image::getImage() {
