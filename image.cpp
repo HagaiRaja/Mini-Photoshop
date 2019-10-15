@@ -160,7 +160,7 @@ Image::Image(char* filename)
                     pixels[i*width + j] = Rgba(255, 255, 255, 0);
                 }
                 else {
-                    pixels[i*width+height] = Rgba(0, 0, 0, 0);
+                    pixels[i*width+ j] = Rgba(0, 0, 0, 0);
                 }
                 fflush(stdout);
             }
