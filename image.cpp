@@ -22,8 +22,6 @@ Image::Image(char *filename)
     if (!strcmp(extension, "bmp"))
     {
         // READ BMP
-
-        int i;
         FILE *f = fopen(filename, "rb");
         unsigned char info[54];
         fread(info, sizeof(unsigned char), 54, f); // read the 54-byte header
@@ -137,69 +135,54 @@ Image::Image(char *filename)
 
         fgets(type, sizeof(type), myfile);
         cout << type;
+
+        char* dimension = new char[15];
+        fgets(dimension, sizeof(dimension), myfile);
+        int width = atoi(strtok(dimension, " "));
+        int height = atoi(strtok(NULL, " "));
+
+        char* grayscale_level_string = new char[3];
+        fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
+        int grayscale_level = atoi(grayscale_level_string);
+
+        grayscale_level_string = new char[3];
+        fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
+        grayscale_level = atoi(grayscale_level_string);
+
+        w = uint(width);
+        h = uint(height);
+        uint size = width * height;
+        pixels = new Rgba[w * h];
+        pixels_ori = new Rgba[w * h];
+
         if (!strcmp(type, "P5\n"))
         {
-            char *dimension = new char[15];
-            fgets(dimension, sizeof(dimension), myfile);
-            int width = atoi(strtok(dimension, " "));
-            int height = atoi(strtok(NULL, " "));
-            cout << width << '\n';
-            cout << height << '\n';
-
-            char *grayscale_level_string = new char[3];
-            fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
-            int grayscale_level = atoi(grayscale_level_string);
-
-            grayscale_level_string = new char[3];
-            fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
-            grayscale_level = atoi(grayscale_level_string);
-            cout << grayscale_level << endl;
-
-            uint size = width * height;
-            w = uint(width);
-            h = uint(height);
             unsigned char *data = new unsigned char[size];
             fread(data, sizeof(unsigned char), size, myfile);
 
-            pixels = new Rgba[w * h];
             for (int i = 0; i < height; ++i)
             {
                 for (int j = 0; j < width; ++j)
                 {
                     cout << int(data[i * width + j]) << " ";
-                    pixels[i * width + j] = Rgba(data[i * width + j], data[i * width + j], data[i * width + j], 0);
+                    uint color = uint(double(data[i * width + j]) / double(grayscale_level) * 255);
+                    pixels[i * width + j] = Rgba(color, color, color, 0);
+                    pixels_ori[i*width + j] = Rgba(color, color, color, 0);
                     fflush(stdout);
                 }
                 cout << endl;
             }
         }
         else if (!strcmp(type, "P2\n")) {
-            char* dimension = new char[15];
-            fgets(dimension, sizeof(dimension), myfile);
-            int width = atoi(strtok(dimension, " "));
-            int height = atoi(strtok(NULL, " "));
-
-            char* grayscale_level_string = new char[3];
-            fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
-            int grayscale_level = atoi(grayscale_level_string);
-
-            grayscale_level_string = new char[3];
-            fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
-            grayscale_level = atoi(grayscale_level_string);
-
-            w = uint(width);
-            h = uint(height);
-
-            pixels = new Rgba[w * h];
-            pixels_ori = new Rgba[w * h];
             int temp;
             for (int i = 0; i < height; ++i)
             {
                 for (int j = 0; j < width; ++j)
                 {
                     fscanf (myfile, "%d", &temp);
-                    pixels[i*width + j] = Rgba(temp, temp, temp,0);
-                    pixels_ori[i*width + j] = Rgba(temp, temp, temp,0);
+                    uint color = uint(double(temp) / double(grayscale_level) * 255);
+                    pixels[i * width + j] = Rgba(color, color, color, 0);
+                    pixels_ori[i*width + j] = Rgba(color, color, color, 0);
                 }
             }
         }
@@ -343,7 +326,7 @@ void Image::operation_not() {
 }
 
 void Image::save(char *filename) {
-    int i, j, temp = 0;
+    int i, j;
     int width = int(w), height = int(h);
 
     FILE* pgmimg;

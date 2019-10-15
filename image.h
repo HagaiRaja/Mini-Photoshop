@@ -28,7 +28,7 @@ public:
         w(_w), h(_h), pixels(NULL)
     {
         pixels = new Rgba[w * h];
-        for (int i = 0; i < w * h; ++i)
+        for (uint i = 0; i < w * h; ++i)
             pixels[i] = c;
     }
 
