@@ -3,9 +3,12 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <iostream>
+#include <QStringBuilder>
 using namespace std;
 
 const QString picturesFolder = "/home/hagairaja/Documents/Pengcit/miniphotoshop/test";
+Image *picture;
+QString fileTitle;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -49,7 +52,7 @@ void MainWindow::on_actionOpen_triggered()
     // IMPLEMENT READ FILE HEREE
     QByteArray ba = fileName.toLocal8Bit();
     char *c_str2 = ba.data();
-    Image *picture = new Image(c_str2);
+    picture = new Image(c_str2);
 //    QImage image(fileName);
     label->setPixmap(QPixmap::fromImage(picture->getImage()));
     gridLayout->addWidget(label);
@@ -58,7 +61,7 @@ void MainWindow::on_actionOpen_triggered()
     mdiArea->addSubWindow(widget);
     // Set the window title
     QStringList pieces = fileName.split( "/" );
-    QString fileTitle = pieces.value( pieces.length() - 1 );
+    fileTitle = pieces.value( pieces.length() - 1 );
     widget->setWindowTitle(fileTitle);
     // And show the widget
     widget->show();
@@ -86,4 +89,27 @@ void MainWindow::on_actionSave_As_triggered()
 void MainWindow::on_actionExit_triggered()
 {
     QApplication::quit();
+}
+
+void MainWindow::on_actionNegative_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->negatify();
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QString negative("Negative - ");
+    widget->setWindowTitle(negative % fileTitle);
+    // And show the widget
+    widget->show();
 }

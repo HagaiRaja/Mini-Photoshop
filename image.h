@@ -45,7 +45,7 @@ public:
 
 
     unsigned int w, h; // Image resolution
-    Rgba *pixels; // 1D array of pixels
+    Rgba *pixels, *pixels_ori; // 1D array of pixels
     static const Rgba kBlack, kWhite, kRed, kGreen, kBlue; // Preset colors
 
 private:
