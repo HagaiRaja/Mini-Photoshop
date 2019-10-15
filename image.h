@@ -42,6 +42,7 @@ public:
     { if (pixels != NULL) delete [] pixels; }
 
     QImage getImage();
+    void negatify();
 
 
     unsigned int w, h; // Image resolution

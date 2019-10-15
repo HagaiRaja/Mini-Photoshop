@@ -75,3 +75,14 @@ QImage Image::getImage() {
     }
     return img;
 }
+
+void Image::negatify() {
+    for (int i = 0; i < h; ++i)
+    {
+        for (int j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i*w + j];
+            pixels[i*w + j] = Rgba(255 - temp.r, 255 - temp.g, 255 - temp.b,0);
+        }
+    }
+}
