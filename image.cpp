@@ -11,47 +11,47 @@ using namespace std;
 Image::Image(char* filename)
 {
     // READ PGM
-    char* type = new char[2];
-    FILE* myfile = fopen(filename, "rb");
+//    char* type = new char[2];
+//    FILE* myfile = fopen(filename, "rb");
 
-    fgets(type, sizeof(type), myfile);
-    cout << type;
-    if (!strcmp(type, "P5\n")) {
-        char* dimension = new char[15];
-        fgets(dimension, sizeof(dimension), myfile);
-        int width = atoi(strtok(dimension, " "));
-        int height = atoi(strtok(NULL, " "));
-        cout << width << '\n';
-        cout << height << '\n';
+//    fgets(type, sizeof(type), myfile);
+//    cout << type;
+//    if (!strcmp(type, "P5\n")) {
+//        char* dimension = new char[15];
+//        fgets(dimension, sizeof(dimension), myfile);
+//        int width = atoi(strtok(dimension, " "));
+//        int height = atoi(strtok(NULL, " "));
+//        cout << width << '\n';
+//        cout << height << '\n';
 
-        char* grayscale_level_string = new char[3];
-        fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
-        int grayscale_level = atoi(grayscale_level_string);
+//        char* grayscale_level_string = new char[3];
+//        fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
+//        int grayscale_level = atoi(grayscale_level_string);
 
-        grayscale_level_string = new char[3];
-        fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
-        grayscale_level = atoi(grayscale_level_string);
-        cout << grayscale_level << endl;
+//        grayscale_level_string = new char[3];
+//        fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
+//        grayscale_level = atoi(grayscale_level_string);
+//        cout << grayscale_level << endl;
 
-        uint size = width * height;
-        w = uint(width);
-        h = uint(height);
-        unsigned char *data = new unsigned char[size];
-        fread(data, sizeof(unsigned char), size, myfile);
+//        uint size = width * height;
+//        w = uint(width);
+//        h = uint(height);
+//        unsigned char *data = new unsigned char[size];
+//        fread(data, sizeof(unsigned char), size, myfile);
 
-        pixels = new Rgba[w * h];
-        for (int i = 0; i < height; ++i)
-        {
-            for (int j = 0; j < width; ++j)
-            {
-                cout << int(data[i*width + j]) << " ";
-                pixels[i*width + j] = Rgba(data[i*width + j], data[i*width + j], data[i*width + j],0);
-                fflush(stdout);
-            }
-            cout << endl;
-        }
-    }
-    else cout << "Unable to open file";
+//        pixels = new Rgba[w * h];
+//        for (int i = 0; i < height; ++i)
+//        {
+//            for (int j = 0; j < width; ++j)
+//            {
+//                cout << int(data[i*width + j]) << " ";
+//                pixels[i*width + j] = Rgba(data[i*width + j], data[i*width + j], data[i*width + j],0);
+//                fflush(stdout);
+//            }
+//            cout << endl;
+//        }
+//    }
+//    else cout << "Unable to open file";
 
     // READ PPM
 //    ifstream fp(filename);
@@ -160,7 +160,7 @@ Image::Image(char* filename)
                     pixels[i*width + j] = Rgba(255, 255, 255, 0);
                 }
                 else {
-                    pixels[i*width + g] = Rgba(0, 0, 0, 0);
+                    pixels[i*width+height] = Rgba(0, 0, 0, 0);
                 }
                 fflush(stdout);
             }
