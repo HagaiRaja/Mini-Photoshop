@@ -58,8 +58,6 @@ Image::Image(char *filename)
         unsigned char *data = new unsigned char[size]; // allocate 3 bytes per pixel
 
         fread(data, sizeof(unsigned char), size, f); // read the rest of the data at once
-                                                     //        printf("%s\n", data);
-                                                     //        fflush(stdout);
         fclose(f);
         pixels = new Rgba[w * h];
         for (uint i = 0; i < h; i++)
@@ -71,11 +69,6 @@ Image::Image(char *filename)
                     data[colorPixelSize * (i * w + j) + 1],
                     data[colorPixelSize * (i * w + j) + 0],
                     0);
-                printf("<%d,%d,%d>\n",
-                       *(uint8_t *)data[colorPixelSize * (i * w + j) + 2],
-                       *(uint8_t *)data[colorPixelSize * (i * w + j) + 1],
-                       *(uint8_t *)data[colorPixelSize * (i * w + j) + 0]);
-                fflush(stdout);
             }
         }
     }
@@ -105,29 +98,54 @@ Image::Image(char *filename)
         h = uint(strtol(strtok(nullptr, " "), nullptr, 10));
         maxLevel = uint(strtol(maxLevelString, nullptr, 10));
         printf("xMax = %d\n", w);
-        printf("xMin = %d\n", h);
+        printf("yMax = %d\n", h);
 
         printf("maxLevel = %d\n", maxLevel);
         fflush(stdout);
 
         uint size = 3 * w * h;
-        unsigned char *data = new unsigned char[size];
-        fread(data, sizeof(unsigned char), size, f);
-        //        printf("data: %s\n", data);
-        fclose(f);
         pixels = new Rgba[w * h];
-        for (uint i = 0; i < h; i++)
+        if (!strcmp(type, "P3\r\n") || !strcmp(type, "P3\n"))
         {
-            for (uint j = 0; j < w; j++)
+            uint8_t *data = new uint8_t[size];
+            for (uint i = 0; i < h; i++)
             {
-                pixels[(i * w) + j] = Rgba(
-                    data[3 * (i * w + j)],
-                    data[3 * (i * w + j) + 1],
-                    data[3 * (i * w + j) + 2],
-                    0);
+                for (uint j = 0; j < 3 * w; j++)
+                {
+                    fscanf(f, "%hhd", data[i * w + j]);
+                    printf("%hhd\n", data[i * w + j]);
+                    fflush(stdout);
+                }
+            }
+            for (uint i = 0; i < h; i++)
+            {
+                for (uint j = 0; j < w; j++)
+                {
+                    pixels[(i * w) + j] = Rgba(
+                        data[3 * (i * w + j)],
+                        data[3 * (i * w + j) + 1],
+                        data[3 * (i * w + j) + 2],
+                        0);
+                }
             }
         }
-        //        fflush(stdout);
+        else
+        { // P6
+            unsigned char *data = new unsigned char[size];
+            fread(data, sizeof(unsigned char), size, f);
+            fclose(f);
+            for (uint i = 0; i < h; i++)
+            {
+                for (uint j = 0; j < w; j++)
+                {
+                    pixels[(i * w) + j] = Rgba(
+                        data[3 * (i * w + j)],
+                        data[3 * (i * w + j) + 1],
+                        data[3 * (i * w + j) + 2],
+                        0);
+                }
+            }
+        }
     }
     else if (!strcmp(extension, "pgm"))
     {
@@ -173,13 +191,14 @@ Image::Image(char *filename)
                 cout << endl;
             }
         }
-        else if (!strcmp(type, "P2\n")) {
-            char* dimension = new char[15];
+        else if (!strcmp(type, "P2\n"))
+        {
+            char *dimension = new char[15];
             fgets(dimension, sizeof(dimension), myfile);
             int width = atoi(strtok(dimension, " "));
             int height = atoi(strtok(NULL, " "));
 
-            char* grayscale_level_string = new char[3];
+            char *grayscale_level_string = new char[3];
             fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
             int grayscale_level = atoi(grayscale_level_string);
 
@@ -197,17 +216,19 @@ Image::Image(char *filename)
             {
                 for (int j = 0; j < width; ++j)
                 {
-                    fscanf (myfile, "%d", &temp);
-                    pixels[i*width + j] = Rgba(temp, temp, temp,0);
-                    pixels_ori[i*width + j] = Rgba(temp, temp, temp,0);
+                    fscanf(myfile, "%d", &temp);
+                    pixels[i * width + j] = Rgba(temp, temp, temp, 0);
+                    pixels_ori[i * width + j] = Rgba(temp, temp, temp, 0);
                 }
             }
         }
-        else {
+        else
+        {
             cout << "Unable to open file";
         }
     }
-    else cout << "Unable to open file";
+    else
+        cout << "Unable to open file";
 }
 
 QImage Image::getImage()
@@ -217,42 +238,47 @@ QImage Image::getImage()
     fflush(stdout);
     img.fill(QColor(Qt::white).rgba());
 
-    for (uint x = 0; x < h; ++x) {
-        for (uint y = 0; y < w; ++y) {
-            img.setPixel(y, x, qRgb(pixels[(x*w)+y].r, pixels[(x*w)+y].g, pixels[(x*w)+y].b));
+    for (uint y = 0; y < h; ++y)
+    {
+        for (uint x = 0; x < w; ++x)
+        {
+            img.setPixel(x, y, qRgb(pixels[(y * w) + x].r, pixels[(y * w) + x].g, pixels[(y * w) + x].b));
         }
     }
     return img;
 }
 
-void Image::negatify() {
+void Image::negatify()
+{
     for (uint i = 0; i < h; ++i)
     {
         for (uint j = 0; j < w; ++j)
         {
-            Rgba temp = pixels[i*w + j];
-            pixels[i*w + j] = Rgba(255 - temp.r, 255 - temp.g, 255 - temp.b,0);
+            Rgba temp = pixels[i * w + j];
+            pixels[i * w + j] = Rgba(255 - temp.r, 255 - temp.g, 255 - temp.b, 0);
         }
     }
 }
 
-void Image::grayscale() {
+void Image::grayscale()
+{
     for (uint i = 0; i < h; ++i)
     {
         for (uint j = 0; j < w; ++j)
         {
-            Rgba temp = pixels[i*w + j];
-            uint grayscale_value = uint(float(temp.r)*0.298 + float(temp.g)*0.586 + float(temp.b)* 0.143);
-            pixels[i*w + j] = Rgba(grayscale_value, grayscale_value, grayscale_value,0);
+            Rgba temp = pixels[i * w + j];
+            uint grayscale_value = uint(float(temp.r) * 0.298 + float(temp.g) * 0.586 + float(temp.b) * 0.143);
+            pixels[i * w + j] = Rgba(grayscale_value, grayscale_value, grayscale_value, 0);
         }
     }
 }
 
-void Image::save(char *filename) {
+void Image::save(char *filename)
+{
     int i, j, temp = 0;
     int width = int(w), height = int(h);
 
-    FILE* pgmimg;
+    FILE *pgmimg;
     pgmimg = fopen(filename, "wb");
 
     // Writing Magic Number to the File
@@ -263,9 +289,11 @@ void Image::save(char *filename) {
 
     // Writing the maximum gray value
     fprintf(pgmimg, "255\n");
-    for (i = 0; i < height; i++) {
-        for (j = 0; j < width; j++) {
-            temp = pixels[i*width + j].r;
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+        {
+            temp = pixels[i * width + j].r;
 
             // Writing the gray values in the 2D array to the file
             fprintf(pgmimg, "%d ", temp);
@@ -274,5 +302,3 @@ void Image::save(char *filename) {
     }
     fclose(pgmimg);
 }
-
-
