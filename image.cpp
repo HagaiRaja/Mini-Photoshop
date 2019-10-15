@@ -60,11 +60,16 @@ Image::Image(char *filename)
         fread(data, sizeof(unsigned char), size, f); // read the rest of the data at once
         fclose(f);
         pixels = new Rgba[w * h];
-        for (uint i = 0; i < h; i++)
+        pixels_ori = new Rgba[w * h] l for (uint i = 0; i < h; i++)
         {
             for (uint j = 0; j < w; j++)
             {
                 pixels[(i * w) + j] = Rgba(
+                    data[colorPixelSize * (i * w + j) + 2],
+                    data[colorPixelSize * (i * w + j) + 1],
+                    data[colorPixelSize * (i * w + j) + 0],
+                    0);
+                pixels_ori[(i * w) + j] = Rgba(
                     data[colorPixelSize * (i * w + j) + 2],
                     data[colorPixelSize * (i * w + j) + 1],
                     data[colorPixelSize * (i * w + j) + 0],
@@ -143,6 +148,11 @@ Image::Image(char *filename)
                         data[3 * (i * w + j) + 1],
                         data[3 * (i * w + j) + 2],
                         0);
+                    pixels_ori[(i * w) + j] = Rgba(
+                        data[3 * (i * w + j)],
+                        data[3 * (i * w + j) + 1],
+                        data[3 * (i * w + j) + 2],
+                        0);
                 }
             }
         }
@@ -180,12 +190,14 @@ Image::Image(char *filename)
             fread(data, sizeof(unsigned char), size, myfile);
 
             pixels = new Rgba[w * h];
+            pixels_ori = new Rgba[w * h];
             for (int i = 0; i < height; ++i)
             {
                 for (int j = 0; j < width; ++j)
                 {
                     cout << int(data[i * width + j]) << " ";
                     pixels[i * width + j] = Rgba(data[i * width + j], data[i * width + j], data[i * width + j], 0);
+                    pixels_ori[i * width + j] = Rgba(data[i * width + j], data[i * width + j], data[i * width + j], 0);
                     fflush(stdout);
                 }
                 cout << endl;
@@ -250,6 +262,7 @@ QImage Image::getImage()
 
 void Image::negatify()
 {
+
     for (uint i = 0; i < h; ++i)
     {
         for (uint j = 0; j < w; ++j)
@@ -275,30 +288,66 @@ void Image::grayscale()
 
 void Image::save(char *filename)
 {
-    int i, j, temp = 0;
-    int width = int(w), height = int(h);
-
-    FILE *pgmimg;
-    pgmimg = fopen(filename, "wb");
-
-    // Writing Magic Number to the File
-    fprintf(pgmimg, "P2\n");
-
-    // Writing Width and Height
-    fprintf(pgmimg, "%d %d\n", width, height);
-
-    // Writing the maximum gray value
-    fprintf(pgmimg, "255\n");
-    for (i = 0; i < height; i++)
+    char *token = filename;
+    while (*token != '.')
     {
-        for (j = 0; j < width; j++)
-        {
-            temp = pixels[i * width + j].r;
-
-            // Writing the gray values in the 2D array to the file
-            fprintf(pgmimg, "%d ", temp);
-        }
-        fprintf(pgmimg, "\n");
+        printf("%s\n", token);
+        fflush(stdout);
+        token = token + 1 * sizeof(*token);
     }
-    fclose(pgmimg);
+    token = token + 1 * sizeof(*token);
+    const char *extension = token;
+    if (!strcmp(extension, "bmp"))
+    {
+    }
+    else if (!strcmp(extension, "ppm"))
+    {
+        FILE *ppmimg;
+        ppmimg = fopen(filename, "wb");
+
+        // Writing Magic Number to the File
+        fprintf(ppmimg, "P6\n");
+
+        // Writing Width and Height
+        fprintf(ppmimg, "%d %d\n", w, h);
+
+        // Writing the maximum gray value
+        fprintf(ppmimg, "255\n");
+        for (uint i = 0; i < h; i++)
+        {
+            for (uint j = 0; j < w; j++)
+            {
+                fprintf(ppmimg, "%c%c%c", pixels[i * w + j].r, pixels[i * w + j].g, pixels[i * w + j].b);
+            }
+        }
+        fclose(ppmimg);
+    }
+    else if (!strcmp(extension, "pgm"))
+    {
+        int i, j, temp = 0;
+        int width = int(w), height = int(h);
+        FILE *pgmimg;
+        pgmimg = fopen(filename, "wb");
+
+        // Writing Magic Number to the File
+        fprintf(pgmimg, "P2\n");
+
+        // Writing Width and Height
+        fprintf(pgmimg, "%d %d\n", width, height);
+
+        // Writing the maximum gray value
+        fprintf(pgmimg, "255\n");
+        for (i = 0; i < height; i++)
+        {
+            for (j = 0; j < width; j++)
+            {
+                temp = pixels[i * width + j].r;
+
+                // Writing the gray values in the 2D array to the file
+                fprintf(pgmimg, "%d ", temp);
+            }
+            fprintf(pgmimg, "\n");
+        }
+        fclose(pgmimg);
+    }
 }
