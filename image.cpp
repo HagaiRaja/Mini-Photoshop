@@ -248,6 +248,61 @@ void Image::grayscale() {
     }
 }
 
+void Image::flip_vertical() {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w/2; ++j)
+        {
+            Rgba temp = pixels[i*w + j];
+            pixels[i*w + j] = pixels[i*w + w - j];
+            pixels[i*w + w - j] = temp;
+        }
+    }
+}
+
+void Image::flip_horizontal() {
+    for (uint i = 0; i < h/2; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i*w + j];
+            pixels[i*w + j] = pixels[(h-i)*w + j];
+            pixels[(h-i)*w + j] = temp;
+        }
+    }
+}
+
+void Image::rotate_90_clockwise() {
+    Rgba *pixel_result = new Rgba[w*h];
+    //pixel_result ->
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            pixel_result[j*h+(h-1-i)] = pixels[i*w+j];
+        }
+    }
+    pixels = pixel_result;
+    uint temp = w;
+    w = h;
+    h = temp;
+}
+
+void Image::rotate_90_c_clockwise() {
+    Rgba *pixel_result = new Rgba[w*h];
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            pixel_result[(w-1-j)*h+i] = pixels[i*w+j];
+        }
+    }
+    pixels = pixel_result;
+    uint temp = w;
+    w = h;
+    h = temp;
+}
+
 void Image::save(char *filename) {
     int i, j, temp = 0;
     int width = int(w), height = int(h);
@@ -265,10 +320,11 @@ void Image::save(char *filename) {
     fprintf(pgmimg, "255\n");
     for (i = 0; i < height; i++) {
         for (j = 0; j < width; j++) {
-            temp = pixels[i*width + j].r;
+            Rgba temp = pixels[i*width + j];
+            int grayscale_value = uint(float(temp.r)*0.298 + float(temp.g)*0.586 + float(temp.b)* 0.143);
 
             // Writing the gray values in the 2D array to the file
-            fprintf(pgmimg, "%d ", temp);
+            fprintf(pgmimg, "%d ", grayscale_value);
         }
         fprintf(pgmimg, "\n");
     }

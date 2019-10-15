@@ -135,5 +135,96 @@ void MainWindow::on_actionGrayscale_triggered()
     widget->setWindowTitle(title_info % fileTitle);
     // And show the widget
     widget->show();
+}
 
+void MainWindow::on_actionFlip_Vertical_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->flip_vertical();
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QString title_info("Flip Vertical - ");
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_actionFlip_Horizontal_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->flip_horizontal();
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QString title_info("Flip Horizontal - ");
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_actionRotate_90_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->rotate_90_clockwise();
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QString title_info("Rotate 90° - ");
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_actionRotate_91_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->rotate_90_c_clockwise();
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QString title_info("Rotate -90° - ");
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
 }

@@ -55,8 +55,18 @@
     <property name="title">
      <string>Filter</string>
     </property>
+    <widget class="QMenu" name="menuTransform">
+     <property name="title">
+      <string>Transform</string>
+     </property>
+     <addaction name="actionFlip_Vertical"/>
+     <addaction name="actionFlip_Horizontal"/>
+     <addaction name="actionRotate_90"/>
+     <addaction name="actionRotate_91"/>
+    </widget>
     <addaction name="actionNegative"/>
     <addaction name="actionGrayscale"/>
+    <addaction name="menuTransform"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -114,6 +124,26 @@
   <action name="actionGrayscale">
    <property name="text">
     <string>Grayscale</string>
+   </property>
+  </action>
+  <action name="actionFlip_Vertical">
+   <property name="text">
+    <string>Flip Vertical</string>
+   </property>
+  </action>
+  <action name="actionFlip_Horizontal">
+   <property name="text">
+    <string>Flip Horizontal</string>
+   </property>
+  </action>
+  <action name="actionRotate_90">
+   <property name="text">
+    <string>Rotate 90°</string>
+   </property>
+  </action>
+  <action name="actionRotate_91">
+   <property name="text">
+    <string>Rotate -90°</string>
    </property>
   </action>
  </widget>

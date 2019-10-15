@@ -35,6 +35,14 @@ private slots:
 
     void on_actionGrayscale_triggered();
 
+    void on_actionFlip_Vertical_triggered();
+
+    void on_actionFlip_Horizontal_triggered();
+
+    void on_actionRotate_90_triggered();
+
+    void on_actionRotate_91_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMdiArea * mdiArea;  // Area in which windows will be added
