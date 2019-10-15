@@ -11,6 +11,7 @@
 #include <QPrintDialog>
 #include <QMdiArea>
 #include <QLabel>
+#include "image.h"
 
 namespace Ui {
 class MainWindow;
@@ -42,6 +43,14 @@ private slots:
     void on_actionRotate_90_triggered();
 
     void on_actionRotate_91_triggered();
+
+    void on_actionOR_triggered();
+
+    void on_actionAND_triggered();
+
+    Image* open_second_image();
+
+    void on_actionNOT_triggered();
 
 private:
     Ui::MainWindow *ui;

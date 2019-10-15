@@ -48,6 +48,8 @@ public:
     void flip_horizontal();
     void rotate_90_clockwise();
     void rotate_90_c_clockwise();
+    void operation_bool(Image *secondImage, bool OR);
+    void operation_not();
     void save(char* filename);
 
 

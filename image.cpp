@@ -303,6 +303,45 @@ void Image::rotate_90_c_clockwise() {
     h = temp;
 }
 
+void Image::operation_bool(Image *secondImage, bool OR) {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i*w + j];
+            Rgba temp_second = secondImage->pixels[i*w + j];
+            Rgba bool_result;
+            if (OR) {
+                bool_result = Rgba(
+                            temp.r | temp_second.r,
+                            temp.g | temp_second.g,
+                            temp.b | temp_second.b,
+                            temp.a | temp_second.a);
+            }
+            else {
+                bool_result = Rgba(
+                            temp.r & temp_second.r,
+                            temp.g & temp_second.g,
+                            temp.b & temp_second.b,
+                            temp.a & temp_second.a);
+            }
+            pixels[i*w + j] = bool_result;
+        }
+    }
+}
+
+void Image::operation_not() {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i*w + j];
+            Rgba not_result = Rgba(~temp.r, ~temp.g, ~temp.b, temp.a);
+            pixels[i*w + j] = not_result;
+        }
+    }
+}
+
 void Image::save(char *filename) {
     int i, j, temp = 0;
     int width = int(w), height = int(h);

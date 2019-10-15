@@ -64,9 +64,18 @@
      <addaction name="actionRotate_90"/>
      <addaction name="actionRotate_91"/>
     </widget>
+    <widget class="QMenu" name="menuBoolean">
+     <property name="title">
+      <string>Boolean</string>
+     </property>
+     <addaction name="actionOR"/>
+     <addaction name="actionAND"/>
+     <addaction name="actionNOT"/>
+    </widget>
     <addaction name="actionNegative"/>
     <addaction name="actionGrayscale"/>
     <addaction name="menuTransform"/>
+    <addaction name="menuBoolean"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -144,6 +153,21 @@
   <action name="actionRotate_91">
    <property name="text">
     <string>Rotate -90°</string>
+   </property>
+  </action>
+  <action name="actionOR">
+   <property name="text">
+    <string>OR</string>
+   </property>
+  </action>
+  <action name="actionAND">
+   <property name="text">
+    <string>AND</string>
+   </property>
+  </action>
+  <action name="actionNOT">
+   <property name="text">
+    <string>NOT</string>
    </property>
   </action>
  </widget>

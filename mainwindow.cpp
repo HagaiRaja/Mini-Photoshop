@@ -228,3 +228,116 @@ void MainWindow::on_actionRotate_91_triggered()
     // And show the widget
     widget->show();
 }
+
+Image* MainWindow::open_second_image() {
+    QDir dir1(picturesFolder);
+    QString path = (dir1.exists()) ? picturesFolder : QDir::currentPath();
+    QString fileName = QFileDialog::getOpenFileName(this, "Open the file", path,
+                                                    tr("Image (*.pgm *.ppm *.pbm *.bmp *.raw)"));
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QFile::Text)) {
+        QMessageBox::warning(this, "Warning", "Cannot open file : " + file.errorString());
+        return NULL;
+    }
+
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    // IMPLEMENT READ FILE HEREE
+    QByteArray ba = fileName.toLocal8Bit();
+    char *c_str2 = ba.data();
+    Image *second_picture = new Image(c_str2);
+    label->setPixmap(QPixmap::fromImage(second_picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QStringList pieces = fileName.split( "/" );
+    QString secondFileTitle = pieces.value( pieces.length() - 1 );
+    widget->setWindowTitle(secondFileTitle);
+    // And show the widget
+    widget->show();
+
+    file.close();
+
+    return second_picture;
+}
+
+void MainWindow::on_actionOR_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    Image *second_picture = this->open_second_image();
+
+    picture->operation_bool(second_picture, true);
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QString title_info("OR operation - ");
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_actionAND_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    Image *second_picture = this->open_second_image();
+
+    picture->operation_bool(second_picture, false);
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QString title_info("AND operation - ");
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_actionNOT_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->operation_not();
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QString title_info("AND operation - ");
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
