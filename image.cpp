@@ -10,7 +10,6 @@ using namespace std;
 
 Image::Image(char *filename)
 {
-
     char *token = filename;
     while (*token != '.')
     {
@@ -174,9 +173,41 @@ Image::Image(char *filename)
                 cout << endl;
             }
         }
-        else
+        else if (!strcmp(type, "P2\n")) {
+            char* dimension = new char[15];
+            fgets(dimension, sizeof(dimension), myfile);
+            int width = atoi(strtok(dimension, " "));
+            int height = atoi(strtok(NULL, " "));
+
+            char* grayscale_level_string = new char[3];
+            fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
+            int grayscale_level = atoi(grayscale_level_string);
+
+            grayscale_level_string = new char[3];
+            fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
+            grayscale_level = atoi(grayscale_level_string);
+
+            w = uint(width);
+            h = uint(height);
+
+            pixels = new Rgba[w * h];
+            pixels_ori = new Rgba[w * h];
+            int temp;
+            for (int i = 0; i < height; ++i)
+            {
+                for (int j = 0; j < width; ++j)
+                {
+                    fscanf (myfile, "%d", &temp);
+                    pixels[i*width + j] = Rgba(temp, temp, temp,0);
+                    pixels_ori[i*width + j] = Rgba(temp, temp, temp,0);
+                }
+            }
+        }
+        else {
             cout << "Unable to open file";
+        }
     }
+    else cout << "Unable to open file";
 }
 
 QImage Image::getImage()
@@ -186,20 +217,48 @@ QImage Image::getImage()
     fflush(stdout);
     img.fill(QColor(Qt::white).rgba());
 
-    for (int x = 0; x < h; ++x)
-    {
-        for (int y = 0; y < w; ++y)
-        {
-            //            if (x < 200 && y < 300) {
-            //                img.setPixel(x, y, qRgb(0,255,0));
-            //            }
-            //            else {
-            //                img.setPixel(x, y, qRgb(pixels[(x*4)+y].r, pixels[(x*4)+y].g, pixels[(x*4)+y].b));
-
-            //            }
-            img.setPixel(x, y, qRgb(pixels[(y * w) + x].r, pixels[(y * w) + x].g, pixels[(y * w) + x].b));
-            //            img.setPixel(x, y, qRgb(255,0,0));
+    for (uint x = 0; x < h; ++x) {
+        for (uint y = 0; y < w; ++y) {
+            img.setPixel(y, x, qRgb(pixels[(x*w)+y].r, pixels[(x*w)+y].g, pixels[(x*w)+y].b));
         }
     }
     return img;
+}
+
+void Image::negatify() {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i*w + j];
+            pixels[i*w + j] = Rgba(255 - temp.r, 255 - temp.g, 255 - temp.b,0);
+        }
+    }
+}
+
+void Image::save(char *filename) {
+    int i, j, temp = 0;
+    int width = int(w), height = int(h);
+
+    FILE* pgmimg;
+    pgmimg = fopen(filename, "wb");
+
+    // Writing Magic Number to the File
+    fprintf(pgmimg, "P2\n");
+
+    // Writing Width and Height
+    fprintf(pgmimg, "%d %d\n", width, height);
+
+    // Writing the maximum gray value
+    fprintf(pgmimg, "255\n");
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            temp = pixels[i*width + j].r;
+
+            // Writing the gray values in the 2D array to the file
+            fprintf(pgmimg, "%d ", temp);
+        }
+        fprintf(pgmimg, "\n");
+    }
+    fclose(pgmimg);
 }

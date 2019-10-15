@@ -53,7 +53,7 @@
    </widget>
    <widget class="QMenu" name="menuAction">
     <property name="title">
-     <string>Action</string>
+     <string>Filter</string>
     </property>
     <addaction name="actionNegative"/>
    </widget>
