@@ -53,7 +53,6 @@ void MainWindow::on_actionOpen_triggered()
     QByteArray ba = fileName.toLocal8Bit();
     char *c_str2 = ba.data();
     picture = new Image(c_str2);
-//    QImage image(fileName);
     label->setPixmap(QPixmap::fromImage(picture->getImage()));
     gridLayout->addWidget(label);
 
@@ -71,19 +70,20 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_actionSave_As_triggered()
 {
-//    QString fileName = QFileDialog::getSaveFileName(this, "Save as");
-//    QFile file(fileName);
-//    if (!file.open(QFile::WriteOnly | QFile::Text)) {
-//        QMessageBox::warning(this, "Warning", "Cannot save file : " + file.errorString());
-//        return;
-//    }
-//    currentFile = fileName;
+    QString fileName = QFileDialog::getSaveFileName(this, "Save as");
+    QFile file(fileName);
+    if (!file.open(QFile::WriteOnly | QFile::Text)) {
+        QMessageBox::warning(this, "Warning", "Cannot save file : " + file.errorString());
+        return;
+    }
 
-//    setWindowTitle(fileName);
-//    QTextStream out(&file);
-//    QString text = ui->textEdit->toPlainText();
-//    out << text;
-//    file.close();
+    QByteArray ba = fileName.toLocal8Bit();
+    char *c_str2 = ba.data();
+    picture->save(c_str2);
+    QStringList pieces = fileName.split( "/" );
+    fileTitle = pieces.value( pieces.length() - 1 );
+    setWindowTitle(fileTitle);
+    file.close();
 }
 
 void MainWindow::on_actionExit_triggered()

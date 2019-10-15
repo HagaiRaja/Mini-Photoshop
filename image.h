@@ -43,6 +43,7 @@ public:
 
     QImage getImage();
     void negatify();
+    void save(char* filename);
 
 
     unsigned int w, h; // Image resolution
