@@ -56,6 +56,7 @@
      <string>Filter</string>
     </property>
     <addaction name="actionNegative"/>
+    <addaction name="actionGrayscale"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -108,6 +109,11 @@
   <action name="actionNegative">
    <property name="text">
     <string>Negative</string>
+   </property>
+  </action>
+  <action name="actionGrayscale">
+   <property name="text">
+    <string>Grayscale</string>
    </property>
   </action>
  </widget>

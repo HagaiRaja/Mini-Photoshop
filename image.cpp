@@ -236,6 +236,18 @@ void Image::negatify() {
     }
 }
 
+void Image::grayscale() {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i*w + j];
+            uint grayscale_value = uint(float(temp.r)*0.298 + float(temp.g)*0.586 + float(temp.b)* 0.143);
+            pixels[i*w + j] = Rgba(grayscale_value, grayscale_value, grayscale_value,0);
+        }
+    }
+}
+
 void Image::save(char *filename) {
     int i, j, temp = 0;
     int width = int(w), height = int(h);
@@ -262,3 +274,5 @@ void Image::save(char *filename) {
     }
     fclose(pgmimg);
 }
+
+

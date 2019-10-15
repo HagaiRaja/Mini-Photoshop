@@ -43,6 +43,7 @@ public:
 
     QImage getImage();
     void negatify();
+    void grayscale();
     void save(char* filename);
 
 
