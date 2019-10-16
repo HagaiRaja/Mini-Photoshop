@@ -11,6 +11,8 @@
 #include <QPrintDialog>
 #include <QMdiArea>
 #include <QLabel>
+#include <QSlider>
+#include <QDialogButtonBox>
 #include "image.h"
 
 namespace Ui {

@@ -322,30 +322,39 @@ void Image::rotate_90_c_clockwise() {
     h = temp;
 }
 
-void Image::change_brightness(uint value) {
+void Image::change_brightness(int value) {
     for (uint i = 0; i < h; ++i)
     {
         for (uint j = 0; j < w; ++j)
         {
             Rgba temp = pixels[i*w+j];
-            uint newR, newG, newB;
+            int newR, newG, newB;
             // Add value to R
-            newR = uint(temp.r)+value;
+            newR = int(temp.r)+value;
             if (newR > 255) {
                 newR = 255;
             }
+            else if (newR < 0) {
+                newR = 0;
+            }
             // Add value to G
-            newG = uint(temp.g)+value;
+            newG = int(temp.g)+value;
             if (newG > 255) {
                 newG = 255;
             }
+            else if(newG < 0) {
+                newG = 0;
+            }
             // Add value to B
-            newB = uint(temp.b)+value;
+            newB = int(temp.b)+value;
             if (newB > 255) {
                 newB = 255;
             }
+            else if (newB < 0) {
+                newB = 0;
+            }
 
-            pixels[i*w+j] = Rgba (newR, newG, newB, 0);
+            pixels[i*w+j] = Rgba (uint(newR), uint(newG), uint(newB), 0);
         }
     }
 

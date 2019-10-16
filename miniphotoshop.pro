@@ -24,15 +24,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    brightnessslider.cpp \
         main.cpp \
         mainwindow.cpp \
     image.cpp
 
 HEADERS += \
+    brightnessslider.h \
         mainwindow.h \
     image.h
 
 FORMS += \
+        brightnessslider.ui \
         mainwindow.ui
 
 RESOURCES += \
