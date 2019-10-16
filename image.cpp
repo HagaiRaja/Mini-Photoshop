@@ -473,6 +473,31 @@ void Image::operation_arithmetic(Image *secondImage)
     }
 }
 
+
+void Image::zoom(int percentage) {
+    Rgba *pixel_result = new Rgba[w * h];
+    uint x,y;
+    double calc_x, calc_y, width = double(w), height = double(h);
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            calc_x = (width/2) - (((width/2) - double(j))/percentage * 100);
+            calc_y = (height/2) - (((height/2) - double(i))/percentage * 100);
+
+            x = uint(calc_x);
+            y = uint(calc_y);
+            if (x < 0 || x >= w || y < 0 || y >= h) {
+                pixel_result[i * w + j] = Rgba(0,0,0,0);
+            }
+            else {
+                pixel_result[i * w + j] = pixels[y * w + x];
+            }
+        }
+    }
+    pixels = pixel_result;
+}
+
 void Image::save(char *filename)
 {
     char *token = filename;

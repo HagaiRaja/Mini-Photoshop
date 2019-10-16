@@ -431,3 +431,73 @@ void MainWindow::on_actionTranslate_triggered()
         widget->show();
     }
 }
+
+void MainWindow::showZoom(int percentage) {
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->zoom(percentage);
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    string title = "Zoom ";
+    title.append(to_string(percentage));
+    title.append(" - ");
+    QString title_info(title.c_str());
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_action33_triggered()
+{
+    this->showZoom(33);
+}
+
+void MainWindow::on_action200_triggered()
+{
+    this->showZoom(200);
+}
+
+void MainWindow::on_action50_triggered()
+{
+    this->showZoom(50);
+}
+
+void MainWindow::on_action100_triggered()
+{
+    this->showZoom(100);
+}
+
+void MainWindow::on_action133_triggered()
+{
+    this->showZoom(133);
+}
+
+void MainWindow::on_action150_triggered()
+{
+    this->showZoom(150);
+}
+
+void MainWindow::on_action500_triggered()
+{
+    this->showZoom(500);
+}
+
+void MainWindow::on_action1000_triggered()
+{
+    this->showZoom(1000);
+}
+
+void MainWindow::on_action2000_triggered()
+{
+    this->showZoom(2000);
+}

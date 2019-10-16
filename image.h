@@ -52,6 +52,7 @@ public:
     void operation_bool(Image *secondImage, bool OR);
     void operation_arithmetic(Image *secondImage);
     void operation_not();
+    void zoom(int percentage);
     void save(char* filename);
     void update_translate(bool from_ori);
 

@@ -60,6 +60,26 @@ private slots:
 
     void on_actionTranslate_triggered();
 
+    void on_action33_triggered();
+
+    void on_action200_triggered();
+
+    void showZoom(int percentage);
+
+    void on_action50_triggered();
+
+    void on_action100_triggered();
+
+    void on_action133_triggered();
+
+    void on_action150_triggered();
+
+    void on_action500_triggered();
+
+    void on_action1000_triggered();
+
+    void on_action2000_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMdiArea * mdiArea;  // Area in which windows will be added

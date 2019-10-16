@@ -47,9 +47,24 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <widget class="QMenu" name="menuZoom">
+     <property name="title">
+      <string>Zoom</string>
+     </property>
+     <addaction name="action33"/>
+     <addaction name="action50"/>
+     <addaction name="action100"/>
+     <addaction name="action133"/>
+     <addaction name="action150"/>
+     <addaction name="action200"/>
+     <addaction name="action500"/>
+     <addaction name="action1000"/>
+     <addaction name="action2000"/>
+    </widget>
     <addaction name="separator"/>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
+    <addaction name="menuZoom"/>
    </widget>
    <widget class="QMenu" name="menuAction">
     <property name="title">
@@ -186,6 +201,51 @@
   <action name="actionBrightness">
    <property name="text">
     <string>Brightness</string>
+   </property>
+  </action>
+  <action name="action33">
+   <property name="text">
+    <string>33%</string>
+   </property>
+  </action>
+  <action name="action50">
+   <property name="text">
+    <string>50%</string>
+   </property>
+  </action>
+  <action name="action100">
+   <property name="text">
+    <string>100%</string>
+   </property>
+  </action>
+  <action name="action133">
+   <property name="text">
+    <string>133%</string>
+   </property>
+  </action>
+  <action name="action150">
+   <property name="text">
+    <string>150%</string>
+   </property>
+  </action>
+  <action name="action200">
+   <property name="text">
+    <string>200%</string>
+   </property>
+  </action>
+  <action name="action500">
+   <property name="text">
+    <string>500%</string>
+   </property>
+  </action>
+  <action name="action1000">
+   <property name="text">
+    <string>1000%</string>
+   </property>
+  </action>
+  <action name="action2000">
+   <property name="text">
+    <string>2000%</string>
    </property>
   </action>
  </widget>
