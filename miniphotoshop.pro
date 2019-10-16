@@ -28,18 +28,21 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     image.cpp \
-    translate_dialog.cpp
+    translate_dialog.cpp \
+    power_transform_dialog.cpp
 
 HEADERS += \
     brightnessslider.h \
         mainwindow.h \
     image.h \
-    translate_dialog.h
+    translate_dialog.h \
+    power_transform_dialog.h
 
 FORMS += \
         brightnessslider.ui \
         mainwindow.ui \
-    translate_dialog.ui
+    translate_dialog.ui \
+    power_transform_dialog.ui
 
 RESOURCES += \
     resources.qrc

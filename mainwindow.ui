@@ -72,7 +72,7 @@
     </property>
     <widget class="QMenu" name="menuTransform">
      <property name="title">
-      <string>Transform</string>
+      <string>Basic</string>
      </property>
      <addaction name="actionFlip_Vertical"/>
      <addaction name="actionFlip_Horizontal"/>
@@ -89,11 +89,18 @@
      <addaction name="actionNOT"/>
      <addaction name="actionADD"/>
     </widget>
+    <widget class="QMenu" name="menuTransform_2">
+     <property name="title">
+      <string>Transform</string>
+     </property>
+     <addaction name="actionPower"/>
+    </widget>
     <addaction name="actionNegative"/>
     <addaction name="actionGrayscale"/>
     <addaction name="menuTransform"/>
     <addaction name="menuBoolean"/>
     <addaction name="actionBrightness"/>
+    <addaction name="menuTransform_2"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -246,6 +253,11 @@
   <action name="action2000">
    <property name="text">
     <string>2000%</string>
+   </property>
+  </action>
+  <action name="actionPower">
+   <property name="text">
+    <string>Gamma Correction</string>
    </property>
   </action>
  </widget>

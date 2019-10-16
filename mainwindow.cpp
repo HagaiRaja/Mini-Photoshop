@@ -6,6 +6,7 @@
 #include <QStringBuilder>
 #include <brightnessslider.h>
 #include "translate_dialog.h"
+#include "power_transform_dialog.h"
 using namespace std;
 
 const QString picturesFolder = "/home/hagairaja/Documents/Pengcit/miniphotoshop/test";
@@ -500,4 +501,37 @@ void MainWindow::on_action1000_triggered()
 void MainWindow::on_action2000_triggered()
 {
     this->showZoom(2000);
+}
+
+void MainWindow::on_actionPower_triggered()
+{
+    Power_transform_dialog transform_dialog;
+    transform_dialog.setModal(true);
+    transform_dialog.setWindowTitle("Power Transform Image");
+
+    if(transform_dialog.exec() == QDialog::Accepted) //Check if they clicked Ok
+    {
+        cout << transform_dialog.gamma << " " << transform_dialog.constant << endl;
+        fflush(stdout);
+
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        widget->setLayout(gridLayout);
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+
+        picture->transform_gamma(transform_dialog.gamma, transform_dialog.constant);
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        gridLayout->addWidget(label);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+        // Set the window title
+        QString title_info("Translate result - ");
+        widget->setWindowTitle(title_info % fileTitle);
+        // And show the widget
+        widget->show();
+    }
 }

@@ -6,6 +6,7 @@
 #include <cstring>
 #include <sstream>
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 Image::Image(char *filename)
@@ -473,6 +474,29 @@ void Image::operation_arithmetic(Image *secondImage)
     }
 }
 
+void Image::transform_gamma(double gamma, int constant) {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i * w + j];
+            double r = constant * (pow(temp.r, gamma)),
+                    g = constant * (pow(temp.g, gamma)),
+                    b = constant * (pow(temp.b, gamma)),
+                    a = constant * (pow(temp.a, gamma));
+
+            if (r > 255) r = 255; if (r < 0) r = 0;
+            if (g > 255) g = 255; if (g < 0) g = 0;
+            if (b > 255) b = 255; if (b < 0) b = 0;
+            if (a > 255) a = 255; if (a < 0) a = 0;
+
+            pixels[i * w + j] = Rgba(uint(r), uint(g), uint(b), uint(a));
+//            cout << r << " " << g << " " << b << " " << a << endl;
+//            fflush(stdout);
+        }
+    }
+//    cout << gamma << " " << constant << endl;
+}
 
 void Image::zoom(int percentage) {
     Rgba *pixel_result = new Rgba[w * h];
