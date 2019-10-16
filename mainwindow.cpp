@@ -5,6 +5,7 @@
 #include <iostream>
 #include <QStringBuilder>
 #include <brightnessslider.h>
+#include "translate_dialog.h"
 using namespace std;
 
 const QString picturesFolder = "/home/hagairaja/Documents/Pengcit/miniphotoshop/test";
@@ -393,4 +394,40 @@ void MainWindow::on_actionADD_triggered()
     widget->setWindowTitle(title_info % fileTitle);
     // And show the widget
     widget->show();
+}
+
+void MainWindow::on_actionTranslate_triggered()
+{
+    Translate_dialog translate_dialog;
+    translate_dialog.setModal(true);
+    translate_dialog.setWindowTitle("Translate Image");
+    translate_dialog.setTranslateRange(picture->w, picture->h, picture->translate_x, picture->translate_y);
+
+    if(translate_dialog.exec() == QDialog::Accepted) //Check if they clicked Ok
+    {
+        cout << translate_dialog.translateX << " " << translate_dialog.translateY << endl;
+        fflush(stdout);
+        picture->translate_x = translate_dialog.translateX;
+        picture->translate_y = translate_dialog.translateY;
+
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        widget->setLayout(gridLayout);
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+
+        picture->update_translate(translate_dialog.from_ori);
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        gridLayout->addWidget(label);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+        // Set the window title
+        QString title_info("Translate result - ");
+        widget->setWindowTitle(title_info % fileTitle);
+        // And show the widget
+        widget->show();
+    }
 }

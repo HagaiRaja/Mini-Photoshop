@@ -63,6 +63,7 @@
      <addaction name="actionFlip_Horizontal"/>
      <addaction name="actionRotate_90"/>
      <addaction name="actionRotate_91"/>
+     <addaction name="actionTranslate"/>
     </widget>
     <widget class="QMenu" name="menuBoolean">
      <property name="title">
@@ -175,6 +176,11 @@
   <action name="actionADD">
    <property name="text">
     <string>ADD</string>
+   </property>
+  </action>
+  <action name="actionTranslate">
+   <property name="text">
+    <string>Translate</string>
    </property>
   </action>
   <action name="actionBrightness">

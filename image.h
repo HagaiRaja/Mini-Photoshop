@@ -53,9 +53,11 @@ public:
     void operation_arithmetic(Image *secondImage);
     void operation_not();
     void save(char* filename);
+    void update_translate(bool from_ori);
 
 
     unsigned int w, h; // Image resolution
+    int translate_x = 0, translate_y = 0;
     Rgba *pixels, *pixels_ori; // 1D array of pixels
     static const Rgba kBlack, kWhite, kRed, kGreen, kBlue; // Preset colors
 

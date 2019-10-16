@@ -27,16 +27,19 @@ SOURCES += \
     brightnessslider.cpp \
         main.cpp \
         mainwindow.cpp \
-    image.cpp
+    image.cpp \
+    translate_dialog.cpp
 
 HEADERS += \
     brightnessslider.h \
         mainwindow.h \
-    image.h
+    image.h \
+    translate_dialog.h
 
 FORMS += \
         brightnessslider.ui \
-        mainwindow.ui
+        mainwindow.ui \
+    translate_dialog.ui
 
 RESOURCES += \
     resources.qrc

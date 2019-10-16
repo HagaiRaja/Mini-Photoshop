@@ -109,6 +109,7 @@ Image::Image(char *filename)
 
         uint size = 3 * w * h;
         pixels = new Rgba[w * h];
+        pixels_ori = new Rgba[w*h];
         if (!strcmp(type, "P3\r\n") || !strcmp(type, "P3\n"))
         {
             uint8_t *data = new uint8_t[size];
@@ -116,28 +117,13 @@ Image::Image(char *filename)
             {
                 for (uint j = 0; j < 3 * w; j++)
                 {
-                    fscanf(f, "%hhd", data[i * w + j]);
-                    printf("%hhd\n", data[i * w + j]);
+                    int temp;
+                    fscanf(f, "%d", &temp);
+                    data[i * w * 3 + j] = static_cast<uint8_t>((temp / static_cast<float>(maxLevel)) * 255);
+                    printf("[%d] %hhu\n", i * w * 3 + j, data[i * w * 3 + j]);
                     fflush(stdout);
                 }
             }
-            for (uint i = 0; i < h; i++)
-            {
-                for (uint j = 0; j < w; j++)
-                {
-                    pixels[(i * w) + j] = Rgba(
-                        data[3 * (i * w + j)],
-                        data[3 * (i * w + j) + 1],
-                        data[3 * (i * w + j) + 2],
-                        0);
-                }
-            }
-        }
-        else
-        { // P6
-            unsigned char *data = new unsigned char[size];
-            fread(data, sizeof(unsigned char), size, f);
-            fclose(f);
             for (uint i = 0; i < h; i++)
             {
                 for (uint j = 0; j < w; j++)
@@ -155,6 +141,28 @@ Image::Image(char *filename)
                 }
             }
         }
+        else
+        { // P6
+            unsigned char *data = new unsigned char[size];
+            fread(data, sizeof(unsigned char), size, f);
+            fclose(f);
+            for (uint i = 0; i < h; i++)
+            {
+                for (uint j = 0; j < w; j++)
+                {
+                    pixels[(i * w) + j] = Rgba(
+                        static_cast<unsigned char>((data[3 * (i * w + j)] / static_cast<float>(maxLevel)) * 255),
+                        static_cast<unsigned char>((data[3 * (i * w + j) + 1] / static_cast<float>(maxLevel)) * 255),
+                        static_cast<unsigned char>((data[3 * (i * w + j) + 2] / static_cast<float>(maxLevel)) * 255),
+                        0);
+                    pixels_ori[(i * w) + j] = Rgba(
+                        static_cast<unsigned char>((data[3 * (i * w + j)] / static_cast<float>(maxLevel)) * 255),
+                        static_cast<unsigned char>((data[3 * (i * w + j) + 1] / static_cast<float>(maxLevel)) * 255),
+                        static_cast<unsigned char>((data[3 * (i * w + j) + 2] / static_cast<float>(maxLevel)) * 255),
+                        0);
+                }
+            }
+        }
     }
     else if (!strcmp(extension, "pgm"))
     {
@@ -165,12 +173,12 @@ Image::Image(char *filename)
         fgets(type, sizeof(type), myfile);
         cout << type;
 
-        char* dimension = new char[15];
+        char *dimension = new char[15];
         fgets(dimension, sizeof(dimension), myfile);
         int width = atoi(strtok(dimension, " "));
         int height = atoi(strtok(NULL, " "));
 
-        char* grayscale_level_string = new char[3];
+        char *grayscale_level_string = new char[3];
         fgets(grayscale_level_string, sizeof(grayscale_level_string), myfile);
         int grayscale_level = atoi(grayscale_level_string);
 
@@ -196,22 +204,23 @@ Image::Image(char *filename)
                     cout << int(data[i * width + j]) << " ";
                     uint color = uint(double(data[i * width + j]) / double(grayscale_level) * 255);
                     pixels[i * width + j] = Rgba(color, color, color, 0);
-                    pixels_ori[i*width + j] = Rgba(color, color, color, 0);
+                    pixels_ori[i * width + j] = Rgba(color, color, color, 0);
                     fflush(stdout);
                 }
                 cout << endl;
             }
         }
-        else if (!strcmp(type, "P2\n")) {
+        else if (!strcmp(type, "P2\n"))
+        {
             int temp;
             for (int i = 0; i < height; ++i)
             {
                 for (int j = 0; j < width; ++j)
                 {
-                    fscanf (myfile, "%d", &temp);
+                    fscanf(myfile, "%d", &temp);
                     uint color = uint(double(temp) / double(grayscale_level) * 255);
                     pixels[i * width + j] = Rgba(color, color, color, 0);
-                    pixels_ori[i*width + j] = Rgba(color, color, color, 0);
+                    pixels_ori[i * width + j] = Rgba(color, color, color, 0);
                 }
             }
         }
@@ -267,38 +276,41 @@ void Image::grayscale()
     }
 }
 
-void Image::flip_vertical() {
+void Image::flip_vertical()
+{
     for (uint i = 0; i < h; ++i)
     {
-        for (uint j = 0; j < w/2; ++j)
+        for (uint j = 0; j < w / 2; ++j)
         {
-            Rgba temp = pixels[i*w + j];
-            pixels[i*w + j] = pixels[i*w + w - j];
-            pixels[i*w + w - j] = temp;
+            Rgba temp = pixels[i * w + j];
+            pixels[i * w + j] = pixels[i * w + w - j];
+            pixels[i * w + w - j] = temp;
         }
     }
 }
 
-void Image::flip_horizontal() {
-    for (uint i = 0; i < h/2; ++i)
+void Image::flip_horizontal()
+{
+    for (uint i = 0; i < h / 2; ++i)
     {
         for (uint j = 0; j < w; ++j)
         {
-            Rgba temp = pixels[i*w + j];
-            pixels[i*w + j] = pixels[(h-i)*w + j];
-            pixels[(h-i)*w + j] = temp;
+            Rgba temp = pixels[i * w + j];
+            pixels[i * w + j] = pixels[(h - i) * w + j];
+            pixels[(h - i) * w + j] = temp;
         }
     }
 }
 
-void Image::rotate_90_clockwise() {
-    Rgba *pixel_result = new Rgba[w*h];
+void Image::rotate_90_clockwise()
+{
+    Rgba *pixel_result = new Rgba[w * h];
     //pixel_result ->
     for (uint i = 0; i < h; ++i)
     {
         for (uint j = 0; j < w; ++j)
         {
-            pixel_result[j*h+(h-1-i)] = pixels[i*w+j];
+            pixel_result[j * h + (h - 1 - i)] = pixels[i * w + j];
         }
     }
     pixels = pixel_result;
@@ -307,13 +319,14 @@ void Image::rotate_90_clockwise() {
     h = temp;
 }
 
-void Image::rotate_90_c_clockwise() {
-    Rgba *pixel_result = new Rgba[w*h];
+void Image::rotate_90_c_clockwise()
+{
+    Rgba *pixel_result = new Rgba[w * h];
     for (uint i = 0; i < h; ++i)
     {
         for (uint j = 0; j < w; ++j)
         {
-            pixel_result[(w-1-j)*h+i] = pixels[i*w+j];
+            pixel_result[(w - 1 - j) * h + i] = pixels[i * w + j];
         }
     }
     pixels = pixel_result;
@@ -357,79 +370,111 @@ void Image::change_brightness(int value) {
             pixels[i*w+j] = Rgba (uint(newR), uint(newG), uint(newB), 0);
         }
     }
-
 }
 
-void Image::operation_bool(Image *secondImage, bool OR) {
+void Image::operation_bool(Image *secondImage, bool OR)
+{
     for (uint i = 0; i < h; ++i)
     {
         for (uint j = 0; j < w; ++j)
         {
-            Rgba temp = pixels[i*w + j];
+            Rgba temp = pixels[i * w + j];
             Rgba temp_second;
-            (OR) ?
-            temp_second = Rgba(0, 0, 0, 0) :
-            temp_second = Rgba(255, 255, 255, 0);
+            (OR) ? temp_second = Rgba(0, 0, 0, 0) : temp_second = Rgba(255, 255, 255, 0);
 
-            if (i < secondImage->h && j < secondImage->w) {
-                temp_second = secondImage->pixels[i*w + j];
+            if (i < secondImage->h && j < secondImage->w)
+            {
+                temp_second = secondImage->pixels[i * w + j];
             }
             Rgba bool_result;
-            if (OR) {
+            if (OR)
+            {
                 bool_result = Rgba(
-                            temp.r | temp_second.r,
-                            temp.g | temp_second.g,
-                            temp.b | temp_second.b,
-                            temp.a | temp_second.a);
+                    temp.r | temp_second.r,
+                    temp.g | temp_second.g,
+                    temp.b | temp_second.b,
+                    temp.a | temp_second.a);
             }
-            else {
+            else
+            {
                 bool_result = Rgba(
-                            temp.r & temp_second.r,
-                            temp.g & temp_second.g,
-                            temp.b & temp_second.b,
-                            temp.a & temp_second.a);
+                    temp.r & temp_second.r,
+                    temp.g & temp_second.g,
+                    temp.b & temp_second.b,
+                    temp.a & temp_second.a);
             }
-            pixels[i*w + j] = bool_result;
+            pixels[i * w + j] = bool_result;
         }
     }
 }
 
-void Image::operation_not() {
+void Image::operation_not()
+{
     for (uint i = 0; i < h; ++i)
     {
         for (uint j = 0; j < w; ++j)
         {
-            Rgba temp = pixels[i*w + j];
+            Rgba temp = pixels[i * w + j];
             Rgba not_result = Rgba(~temp.r, ~temp.g, ~temp.b, temp.a);
-            pixels[i*w + j] = not_result;
+            pixels[i * w + j] = not_result;
         }
     }
 }
 
-
-void Image::operation_arithmetic(Image *secondImage) {
+void Image::update_translate(bool from_ori)
+{
+    Rgba *pixel_result = new Rgba[w * h];
+    //pixel_result ->
     for (uint i = 0; i < h; ++i)
     {
         for (uint j = 0; j < w; ++j)
         {
-            Rgba temp = pixels[i*w + j];
+            if (int(i) - int(translate_y) >= 0 && int(i) - int(translate_y) < int(h) && int(j) - int(translate_x) >= 0 && int(j) - int(translate_x) < int(w))
+            {
+                if (from_ori)
+                {
+                    pixel_result[i * w + j] = pixels_ori[(i - translate_y) * w + j - translate_x];
+                }
+                else
+                {
+                    pixel_result[i * w + j] = pixels[(i - translate_y) * w + j - translate_x];
+                }
+            }
+            else
+            {
+                pixel_result[i * w + j] = Rgba(0, 0, 0, 0);
+            }
+        }
+    }
+    pixels = pixel_result;
+}
+
+void Image::operation_arithmetic(Image *secondImage)
+{
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i * w + j];
             Rgba temp_second(0, 0, 0, 0);
 
-            if (i < secondImage->h && j < secondImage->w) {
-                temp_second = secondImage->pixels[i*w + j];
+            if (i < secondImage->h && j < secondImage->w)
+            {
+                temp_second = secondImage->pixels[i * w + j];
             }
 
             Rgba bool_result = Rgba(
-                        (temp.r + temp_second.r) > 255 ? 255 : (temp.r + temp_second.r),
-                        (temp.r + temp_second.g) > 255 ? 255 : (temp.g + temp_second.g),
-                        (temp.r + temp_second.b) > 255 ? 255 : (temp.b + temp_second.b),
-                        (temp.r + temp_second.a) > 255 ? 255 : (temp.a + temp_second.a));
-            pixels[i*w + j] = bool_result;
+                (temp.r + temp_second.r) > 255 ? 255 : (temp.r + temp_second.r),
+                (temp.r + temp_second.g) > 255 ? 255 : (temp.g + temp_second.g),
+                (temp.r + temp_second.b) > 255 ? 255 : (temp.b + temp_second.b),
+                (temp.r + temp_second.a) > 255 ? 255 : (temp.a + temp_second.a));
+            pixels[i * w + j] = bool_result;
         }
     }
 }
 
-void Image::save(char *filename) {
+void Image::save(char *filename)
+{
     char *token = filename;
     while (*token != '.')
     {
@@ -482,8 +527,8 @@ void Image::save(char *filename) {
         {
             for (j = 0; j < width; j++)
             {
-                Rgba temp = pixels[i*width + j];
-                int grayscale_value = uint(float(temp.r)*0.298 + float(temp.g)*0.586 + float(temp.b)* 0.143);
+                Rgba temp = pixels[i * width + j];
+                int grayscale_value = uint(float(temp.r) * 0.298 + float(temp.g) * 0.586 + float(temp.b) * 0.143);
 
                 // Writing the gray values in the 2D array to the file
                 fprintf(pgmimg, "%d ", grayscale_value);
