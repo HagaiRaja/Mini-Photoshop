@@ -72,11 +72,61 @@ Image::Image(char *filename)
                     data[colorPixelSize * (i * w + j) + 1],
                     data[colorPixelSize * (i * w + j) + 0],
                     0);
-                printf("<%d,%d,%d>\n",
-                       *(uint8_t *)data[colorPixelSize * (i * w + j) + 2],
-                       *(uint8_t *)data[colorPixelSize * (i * w + j) + 1],
-                       *(uint8_t *)data[colorPixelSize * (i * w + j) + 0]);
-                fflush(stdout);
+//                printf("<%d,%d,%d>\n",
+//                       *(uint8_t *)data[colorPixelSize * (i * w + j) + 2],
+//                       *(uint8_t *)data[colorPixelSize * (i * w + j) + 1],
+//                       *(uint8_t *)data[colorPixelSize * (i * w + j) + 0]);
+//                fflush(stdout);
+            }
+        }
+    } else if (!strcmp(extension, "pbm")) {
+        char* type = new char[2];
+        FILE* myfile = fopen(filename, "rb");
+        fgets(type, sizeof(type), myfile);
+        if (!strcmp(type, "P4\n")) {
+            char* dimension = new char [10];
+            fgets(dimension, sizeof(dimension) + 1, myfile);
+            int width = atoi(strtok(dimension, " "));
+            int height = atoi(strtok(NULL, " "));
+            cout << width << '\n';
+            cout << height << '\n';
+            uint size = width * height;
+            w = uint(width);
+            h = uint(height);
+            unsigned char *data = new unsigned char[size];
+            fread(data, sizeof(unsigned char), size, myfile);
+            cout << data;
+            unsigned char temp, gas;
+            unsigned char mask;
+            mask = 1<<7;
+            pixels = new Rgba[w * h];
+//            for (int i = 0; i < height; i++) {
+//                for (int j = 0; j < width; j++) {
+//                    temp = data[i*width+j];
+//                    for (int k = 0; k < 8; k++) {
+//                        temp = (temp & (mask >> k)) != 0;
+//                        pixels[i*width+j*8+k] = Rgba (0,0,0,0);
+//                        if (temp != 0) {
+//                            pixels[i*width+j*8+k] = Rgba(255, 255, 255, 0);
+//                        }
+//                        cout << i << " " << j << " " << k << " " << temp << endl;
+//                        fflush(stdout);
+//                    }
+//                }
+//            }
+            for (int i = 0; i < height * width / 8; i++) {
+                temp = data[i];
+                cout << (int) temp;
+                for (int k = 0; k < 8; k++) {
+                    gas = (temp & (mask >> k)) != 0;
+                    pixels[i*8 + k] = Rgba (0,0,0,0);
+                    if (gas != 0) {
+                        pixels[i*8 + k] = Rgba (255,255,255,0);
+                    }
+
+                    cout << i << " " << k << " " << gas << endl;
+                    fflush(stdout);
+                }
             }
         }
     }
@@ -186,9 +236,9 @@ QImage Image::getImage()
     fflush(stdout);
     img.fill(QColor(Qt::white).rgba());
 
-    for (int x = 0; x < h; ++x)
+    for (int y = 0; y < h; ++y)
     {
-        for (int y = 0; y < w; ++y)
+        for (int x = 0; x < w; ++x)
         {
             //            if (x < 200 && y < 300) {
             //                img.setPixel(x, y, qRgb(0,255,0));

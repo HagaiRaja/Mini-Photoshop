@@ -5,7 +5,7 @@
 #include <iostream>
 using namespace std;
 
-const QString picturesFolder = "/home/hagairaja/Documents/Pengcit/miniphotoshop/test";
+const QString picturesFolder = "/home/holyhawk/Documents/Pengcit/Mini-Photoshop/img";
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
