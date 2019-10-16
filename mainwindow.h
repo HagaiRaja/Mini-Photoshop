@@ -84,6 +84,30 @@ private slots:
 
     void on_actionGraylevel_Slicing_triggered();
 
+    void on_actionBit_level_Slicing_triggered(){}
+
+    void showBitSlicing(uint kernel, int level);
+
+    void on_actionPlane_0_triggered();
+
+    void on_actionPlane_1_triggered();
+
+    void on_actionPlane_2_triggered();
+
+    void on_actionBitplane_3_triggered();
+
+    void on_actionBitplane_4_triggered();
+
+    void on_actionBitplane_5_triggered();
+
+    void on_actionBitplane_6_triggered();
+
+    void on_actionBitplane_7_triggered();
+
+    void on_actionReset_triggered();
+
+    void on_actionAll_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMdiArea * mdiArea;  // Area in which windows will be added

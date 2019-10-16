@@ -55,8 +55,10 @@ public:
     void transform_gamma(double gamma, int constant);
     void graylevel_slicing(int start, int end, bool preserve);
     void zoom(int percentage);
+    void bit_slicing(uint kernel);
     void save(char* filename);
     void update_translate(bool from_ori);
+    void reset();
 
 
     unsigned int w, h; // Image resolution

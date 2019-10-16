@@ -518,6 +518,34 @@ void Image::graylevel_slicing(int start, int end, bool preserve) {
     }
 }
 
+
+void Image::bit_slicing(uint kernel) {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i * w + j];
+            uint grayscale_value = uint(float(temp.r) * 0.298 + float(temp.g) * 0.586 + float(temp.b) * 0.143);
+            if ((grayscale_value & kernel) != 0) {
+                pixels[i * w + j] = Rgba(255,255,255,0);
+            }
+            else {
+                pixels[i * w + j] = Rgba(0,0,0,0);
+            }
+        }
+    }
+}
+
+void Image::reset() {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            pixels[i * w + j] = pixels_ori[i * w + j];
+        }
+    }
+}
+
 void Image::zoom(int percentage) {
     Rgba *pixel_result = new Rgba[w * h];
     uint x,y;

@@ -8,6 +8,7 @@
 #include "translate_dialog.h"
 #include "power_transform_dialog.h"
 #include "graylevel_slicing_dialog.h"
+#include <cmath>
 using namespace std;
 
 const QString picturesFolder = "/home/hagairaja/Documents/Pengcit/miniphotoshop/test";
@@ -567,5 +568,83 @@ void MainWindow::on_actionGraylevel_Slicing_triggered()
         widget->setWindowTitle(title_info % fileTitle);
         // And show the widget
         widget->show();
+    }
+}
+
+void MainWindow::showBitSlicing(uint kernel, int level) {
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->bit_slicing(kernel);
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    string title = "Bit-level Slicing ";
+    title.append(to_string(level));
+    title.append(" - ");
+    QString title_info(title.c_str());
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_actionPlane_0_triggered()
+{
+    showBitSlicing(1, 0);
+}
+
+void MainWindow::on_actionPlane_1_triggered()
+{
+    showBitSlicing(2, 1);
+}
+
+void MainWindow::on_actionPlane_2_triggered()
+{
+    showBitSlicing(4, 2);
+}
+
+void MainWindow::on_actionBitplane_3_triggered()
+{
+    showBitSlicing(8, 3);
+}
+
+void MainWindow::on_actionBitplane_4_triggered()
+{
+    showBitSlicing(16, 4);
+}
+
+void MainWindow::on_actionBitplane_5_triggered()
+{
+    showBitSlicing(32, 5);
+}
+
+void MainWindow::on_actionBitplane_6_triggered()
+{
+    showBitSlicing(64, 6);
+}
+
+void MainWindow::on_actionBitplane_7_triggered()
+{
+    showBitSlicing(128, 7);
+}
+
+void MainWindow::on_actionReset_triggered()
+{
+    picture->reset();
+}
+
+void MainWindow::on_actionAll_triggered()
+{
+    for (int i = 0; i < 8; i++) {
+        showBitSlicing(uint(pow(2, i)), i);
+        picture->reset();
     }
 }
