@@ -498,6 +498,26 @@ void Image::transform_gamma(double gamma, int constant) {
 //    cout << gamma << " " << constant << endl;
 }
 
+void Image::graylevel_slicing(int start, int end, bool preserve) {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i * w + j];
+            int grayscale_value = int(float(temp.r) * 0.298 + float(temp.g) * 0.586 + float(temp.b) * 0.143);
+
+            if (grayscale_value >= start && grayscale_value <= end) {
+                pixels[i * w + j] = Rgba(255,255,255,0);
+            }
+            else {
+                if (!preserve) {
+                    pixels[i * w + j] = Rgba(0,0,0,0);
+                }
+            }
+        }
+    }
+}
+
 void Image::zoom(int percentage) {
     Rgba *pixel_result = new Rgba[w * h];
     uint x,y;

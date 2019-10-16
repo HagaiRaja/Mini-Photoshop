@@ -7,6 +7,7 @@
 #include <brightnessslider.h>
 #include "translate_dialog.h"
 #include "power_transform_dialog.h"
+#include "graylevel_slicing_dialog.h"
 using namespace std;
 
 const QString picturesFolder = "/home/hagairaja/Documents/Pengcit/miniphotoshop/test";
@@ -529,7 +530,40 @@ void MainWindow::on_actionPower_triggered()
         // Adding a widget as a sub window in the Mdi Area
         mdiArea->addSubWindow(widget);
         // Set the window title
-        QString title_info("Translate result - ");
+        QString title_info("Power Transformation result - ");
+        widget->setWindowTitle(title_info % fileTitle);
+        // And show the widget
+        widget->show();
+    }
+}
+
+void MainWindow::on_actionGraylevel_Slicing_triggered()
+{
+    Graylevel_slicing_dialog dialog;
+    dialog.setModal(true);
+    dialog.setWindowTitle("Gray-level Slicing");
+
+    if(dialog.exec() == QDialog::Accepted) //Check if they clicked Ok
+    {
+        cout << dialog.start << " " << dialog.end << " " << dialog.preserve << endl;
+        fflush(stdout);
+
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        widget->setLayout(gridLayout);
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+
+        picture->graylevel_slicing(dialog.start, dialog.end, dialog.preserve);
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        gridLayout->addWidget(label);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+        // Set the window title
+        QString title_info("Gray-level Slicing result - ");
         widget->setWindowTitle(title_info % fileTitle);
         // And show the widget
         widget->show();

@@ -82,6 +82,8 @@ private slots:
 
     void on_actionPower_triggered();
 
+    void on_actionGraylevel_Slicing_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMdiArea * mdiArea;  // Area in which windows will be added

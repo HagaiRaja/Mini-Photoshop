@@ -94,6 +94,7 @@
       <string>Transform</string>
      </property>
      <addaction name="actionPower"/>
+     <addaction name="actionGraylevel_Slicing"/>
     </widget>
     <addaction name="actionNegative"/>
     <addaction name="actionGrayscale"/>
@@ -258,6 +259,11 @@
   <action name="actionPower">
    <property name="text">
     <string>Gamma Correction</string>
+   </property>
+  </action>
+  <action name="actionGraylevel_Slicing">
+   <property name="text">
+    <string>Gray-level Slicing</string>
    </property>
   </action>
  </widget>

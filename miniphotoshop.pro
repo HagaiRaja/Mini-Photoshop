@@ -29,20 +29,23 @@ SOURCES += \
         mainwindow.cpp \
     image.cpp \
     translate_dialog.cpp \
-    power_transform_dialog.cpp
+    power_transform_dialog.cpp \
+    graylevel_slicing_dialog.cpp
 
 HEADERS += \
     brightnessslider.h \
         mainwindow.h \
     image.h \
     translate_dialog.h \
-    power_transform_dialog.h
+    power_transform_dialog.h \
+    graylevel_slicing_dialog.h
 
 FORMS += \
         brightnessslider.ui \
         mainwindow.ui \
     translate_dialog.ui \
-    power_transform_dialog.ui
+    power_transform_dialog.ui \
+    graylevel_slicing_dialog.ui
 
 RESOURCES += \
     resources.qrc
