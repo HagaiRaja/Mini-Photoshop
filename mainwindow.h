@@ -44,6 +44,8 @@ private slots:
 
     void on_actionRotate_91_triggered();
 
+    void on_actionBrightness_triggered();
+
     void on_actionOR_triggered();
 
     void on_actionAND_triggered();
