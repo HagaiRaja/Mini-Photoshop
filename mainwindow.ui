@@ -78,6 +78,7 @@
     <addaction name="actionGrayscale"/>
     <addaction name="menuTransform"/>
     <addaction name="menuBoolean"/>
+    <addaction name="actionBrightness"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -180,6 +181,9 @@
   <action name="actionTranslate">
    <property name="text">
     <string>Translate</string>
+  <action name="actionBrightness">
+   <property name="text">
+    <string>Brightness</string>
    </property>
   </action>
  </widget>

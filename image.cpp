@@ -322,6 +322,35 @@ void Image::rotate_90_c_clockwise() {
     h = temp;
 }
 
+void Image::change_brightness(uint value) {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i*w+j];
+            uint newR, newG, newB;
+            // Add value to R
+            newR = uint(temp.r)+value;
+            if (newR > 255) {
+                newR = 255;
+            }
+            // Add value to G
+            newG = uint(temp.g)+value;
+            if (newG > 255) {
+                newG = 255;
+            }
+            // Add value to B
+            newB = uint(temp.b)+value;
+            if (newB > 255) {
+                newB = 255;
+            }
+
+            pixels[i*w+j] = Rgba (newR, newG, newB, 0);
+        }
+    }
+
+}
+
 void Image::operation_bool(Image *secondImage, bool OR) {
     for (uint i = 0; i < h; ++i)
     {
