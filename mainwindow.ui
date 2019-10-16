@@ -181,6 +181,8 @@
   <action name="actionTranslate">
    <property name="text">
     <string>Translate</string>
+   </property>
+  </action>
   <action name="actionBrightness">
    <property name="text">
     <string>Brightness</string>
