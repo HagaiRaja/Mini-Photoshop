@@ -26,14 +26,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    image.cpp
+    image.cpp \
+    translate_dialog.cpp
 
 HEADERS += \
         mainwindow.h \
-    image.h
+    image.h \
+    translate_dialog.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    translate_dialog.ui
 
 RESOURCES += \
     resources.qrc

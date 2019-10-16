@@ -368,6 +368,29 @@ void Image::operation_not() {
     }
 }
 
+void Image::update_translate(bool from_ori) {
+    Rgba *pixel_result = new Rgba[w*h];
+    //pixel_result ->
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            if (int(i) - int(translate_y) >= 0 && int(i) - int(translate_y) < int(h)
+                    && int(j) - int(translate_x) >= 0 && int(j) - int(translate_x) < int(w)) {
+                if (from_ori) {
+                    pixel_result[i*w+j] = pixels_ori[(i- translate_y)*w + j - translate_x];
+                }
+                else {
+                    pixel_result[i*w+j] = pixels[(i- translate_y)*w + j - translate_x];
+                }
+            }
+            else {
+                pixel_result[i*w+j] = Rgba(0,0,0,0);
+            }
+        }
+    }
+    pixels = pixel_result;
+}
 
 void Image::operation_arithmetic(Image *secondImage) {
     for (uint i = 0; i < h; ++i)
