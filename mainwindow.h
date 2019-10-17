@@ -108,6 +108,8 @@ private slots:
 
     void on_actionAll_triggered();
 
+    void on_actionLog_Transformation_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMdiArea * mdiArea;  // Area in which windows will be added
