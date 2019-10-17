@@ -9,6 +9,11 @@
 #include <cmath>
 using namespace std;
 
+const Image::Rgba Image::kBlack = Image::Rgba(0,0,0,0);
+const Image::Rgba Image::kWhite = Image::Rgba(255,255,255,0);
+const Image::Rgba Image::kRed = Image::Rgba(255,0,0,0);
+const Image::Rgba Image::kGreen = Image::Rgba(0,255,0,0);
+const Image::Rgba Image::kBlue = Image::Rgba(0,0,255,0);
 Image::Image(char *filename)
 {
     char *token = filename;
@@ -875,6 +880,70 @@ void Image::high_pass_filter(uint option){
     }
     }
 }
+
+void Image::unsharp_mask(Image& lowpass_image, Image& highpass_image) {
+    double smoothing_filter[] = {
+        1,1,1,1,1,
+        1,1,1,1,1,
+        1,1,1,1,1,
+        1,1,1,1,1,
+        1,1,1,1,1,
+    };
+
+    lowpass_image.pixels = new Rgba[w*h];
+    highpass_image.pixels = new Rgba[w*h];
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            lowpass_image.pixels[i * w + j] = pixels[i * w + j];
+        }
+    }
+
+    lowpass_image.konvolusi(smoothing_filter,5,25);
+    for (uint i = 0 ; i < w*h ; i++) {
+        highpass_image.pixels[i].r = this->pixels[i].r - lowpass_image.pixels[i].r;
+        highpass_image.pixels[i].g = this->pixels[i].g - lowpass_image.pixels[i].g;
+        highpass_image.pixels[i].b = this->pixels[i].b - lowpass_image.pixels[i].b;
+    }
+
+    for (uint i = 0 ; i < w*h ; i++) {
+        this->pixels[i] += highpass_image.pixels[i];
+    }
+}
+
+void Image::highboost(double alpha, Image& lowpass_image, Image& highpass_image) {
+    double smoothing_filter[] = {
+        1,1,1,1,1,
+        1,1,1,1,1,
+        1,1,1,1,1,
+        1,1,1,1,1,
+        1,1,1,1,1,
+    };
+
+    lowpass_image.pixels = new Rgba[w*h];
+    highpass_image.pixels = new Rgba[w*h];
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            lowpass_image.pixels[i * w + j] = pixels[i * w + j];
+        }
+    }
+
+    lowpass_image.konvolusi(smoothing_filter,5,25);
+    for (uint i = 0 ; i < w*h ; i++) {
+        highpass_image.pixels[i].r = this->pixels[i].r - lowpass_image.pixels[i].r;
+        highpass_image.pixels[i].g = this->pixels[i].g - lowpass_image.pixels[i].g;
+        highpass_image.pixels[i].b = this->pixels[i].b - lowpass_image.pixels[i].b;
+    }
+
+    for (uint i = 0 ; i < w*h ; i++) {
+        this->pixels[i] = (alpha-1) * this->pixels[i] + highpass_image.pixels[i];
+    }
+}
+
+
 uint8_t Image::threshold(int x) {
     if (x>255) {
         return 255;

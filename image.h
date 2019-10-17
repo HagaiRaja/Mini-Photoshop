@@ -16,9 +16,11 @@ public:
         bool operator != (const Rgba &c) const
         { return c.r != r || c.g != g || c.b != b || c.a != a; }
         Rgba& operator *= (const Rgba &rgba)
-        { r *= rgba.r, g *= rgba.g, b *= rgba.b; return *this; }
+        { Rgba* result = new Rgba(r * rgba.r, g * rgba.g, b * rgba.b, 0); return *result; }
         Rgba& operator += (const Rgba &rgba)
-        { r += rgba.r, g += rgba.g, b += rgba.b; return *this; }
+        { Rgba* result = new Rgba(r + rgba.r, g + rgba.g, b + rgba.b, 0); return *result; }
+        Rgba& operator -= (const Rgba &rgba)
+        { Rgba* result = new Rgba(r - rgba.r, g - rgba.g, b - rgba.b, 0); return *result; }
         unsigned char r, g, b, a;
     };
 
@@ -65,6 +67,8 @@ public:
     void reset();
     void median_filter(const uint xSize, const uint ySize);
     void high_pass_filter(uint option);
+    void unsharp_mask(Image& lowpass_image, Image& highpass_image);
+    void highboost(double alpha, Image& lowpass_image, Image& highpass_image);
 
     unsigned int w, h; // Image resolution
     int translate_x = 0, translate_y = 0;

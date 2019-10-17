@@ -128,6 +128,8 @@
     <addaction name="actionBrightness"/>
     <addaction name="menuTransform_2"/>
     <addaction name="menuConvolutional"/>
+    <addaction name="actionUnsharp_Mask"/>
+    <addaction name="actionHigh_Boost"/>
    </widget>
    <widget class="QMenu" name="menuDetection">
     <property name="title">
@@ -426,6 +428,16 @@
   <action name="actionHigh_Pass_Filter">
    <property name="text">
     <string>High Pass Filter</string>
+   </property>
+  </action>
+  <action name="actionUnsharp_Mask">
+   <property name="text">
+    <string>Unsharp Mask</string>
+   </property>
+  </action>
+  <action name="actionHigh_Boost">
+   <property name="text">
+    <string>High Boost</string>
    </property>
   </action>
  </widget>

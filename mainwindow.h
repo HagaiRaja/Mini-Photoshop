@@ -131,6 +131,10 @@ private slots:
 
     void on_actionHigh_Pass_Filter_triggered();
 
+    void on_actionUnsharp_Mask_triggered();
+
+    void on_actionHigh_Boost_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMdiArea *mdiArea; // Area in which windows will be added

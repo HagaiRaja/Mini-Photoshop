@@ -12,6 +12,7 @@
 #include "logtransformdialog.h"
 #include "medianfilterdialog.h"
 #include "highpassfilterdialog.h"
+#include "highboostdialog.h"
 #include <cmath>
 #include <QtCharts>
 using namespace std;
@@ -953,6 +954,116 @@ void MainWindow::on_actionHigh_Pass_Filter_triggered()
         widget->setWindowTitle(title_info % fileTitle);
         // And show the widget
         widget->show();
+    }
+
+}
+
+void MainWindow::on_actionUnsharp_Mask_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    QWidget *lowpassWidget = new QWidget(mdiArea);
+    QWidget *highpassWidget = new QWidget(mdiArea);
+
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    QGridLayout *lowpassGridLayout = new QGridLayout(lowpassWidget);
+    QGridLayout *highpassGridLayout = new QGridLayout(highpassWidget);
+
+    widget->setLayout(gridLayout);
+    lowpassWidget->setLayout(lowpassGridLayout);
+    highpassWidget->setLayout(highpassGridLayout);
+
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+    QLabel *lowpassLabel = new QLabel(lowpassWidget);
+    QLabel *highpassLabel = new QLabel(highpassWidget);
+
+    Image lowpass_image(picture->w,picture->h);
+    Image highpass_image(picture->w,picture->h);
+    picture->unsharp_mask(lowpass_image, highpass_image);
+
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    lowpassLabel->setPixmap(QPixmap::fromImage(lowpass_image.getImage()));
+    highpassLabel->setPixmap(QPixmap::fromImage(highpass_image.getImage()));
+
+    gridLayout->addWidget(label);
+    lowpassGridLayout->addWidget(lowpassLabel);
+    highpassGridLayout->addWidget(highpassLabel);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    mdiArea->addSubWindow(lowpassWidget);
+    mdiArea->addSubWindow(highpassWidget);
+
+    // Set the window title
+
+    QString title_unsharp("Unsharp Mask - ");
+    QString title_lowpass("Low Pass Filter - ");
+    QString title_highpass("High Pass Filter - ");
+    widget->setWindowTitle(title_unsharp % fileTitle);
+    lowpassWidget->setWindowTitle(title_lowpass % fileTitle);
+    highpassWidget->setWindowTitle(title_highpass % fileTitle);
+    // And show the widget
+    widget->show();
+    lowpassWidget->show();
+    highpassWidget->show();
+}
+
+void MainWindow::on_actionHigh_Boost_triggered()
+{
+    HighBoostDialog dialog;
+    dialog.setModal(true);
+    dialog.setWindowTitle("High Boost");
+    if (dialog.exec() == QDialog::Accepted) {
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        QWidget *lowpassWidget = new QWidget(mdiArea);
+        QWidget *highpassWidget = new QWidget(mdiArea);
+
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        QGridLayout *lowpassGridLayout = new QGridLayout(lowpassWidget);
+        QGridLayout *highpassGridLayout = new QGridLayout(highpassWidget);
+
+        widget->setLayout(gridLayout);
+        lowpassWidget->setLayout(lowpassGridLayout);
+        highpassWidget->setLayout(highpassGridLayout);
+
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+        QLabel *lowpassLabel = new QLabel(lowpassWidget);
+        QLabel *highpassLabel = new QLabel(highpassWidget);
+
+        Image lowpass_image(picture->w,picture->h);
+        Image highpass_image(picture->w,picture->h);
+        picture->highboost(dialog.constant, lowpass_image, highpass_image);
+
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        lowpassLabel->setPixmap(QPixmap::fromImage(lowpass_image.getImage()));
+        highpassLabel->setPixmap(QPixmap::fromImage(highpass_image.getImage()));
+
+        gridLayout->addWidget(label);
+        lowpassGridLayout->addWidget(lowpassLabel);
+        highpassGridLayout->addWidget(highpassLabel);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+        mdiArea->addSubWindow(lowpassWidget);
+        mdiArea->addSubWindow(highpassWidget);
+
+        // Set the window title
+
+        QString title_unsharp("High Boost - ");
+        QString title_lowpass("Low Pass Filter - ");
+        QString title_highpass("High Pass Filter - ");
+        widget->setWindowTitle(title_unsharp % fileTitle);
+        lowpassWidget->setWindowTitle(title_lowpass % fileTitle);
+        highpassWidget->setWindowTitle(title_highpass % fileTitle);
+        // And show the widget
+        widget->show();
+        lowpassWidget->show();
+        highpassWidget->show();
     }
 
 }

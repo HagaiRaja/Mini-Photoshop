@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     brightnessslider.cpp \
+    highboostdialog.cpp \
     highpassfilterdialog.cpp \
     logtransformdialog.cpp \
         main.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
 
 HEADERS += \
     brightnessslider.h \
+    highboostdialog.h \
     highpassfilterdialog.h \
     logtransformdialog.h \
         mainwindow.h \
@@ -50,6 +52,7 @@ HEADERS += \
 
 FORMS += \
         brightnessslider.ui \
+    highboostdialog.ui \
     highpassfilterdialog.ui \
     logtransformdialog.ui \
         mainwindow.ui \
