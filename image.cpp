@@ -639,6 +639,82 @@ void Image::contrast_stretching(int x1, int y1, int x2, int y2) {
     }
 }
 
+void Image::konvolusi(double kernel[], int dimension, double divident) {
+    Rgba *pixel_result = new Rgba[w * h];
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            pixel_result[i * w + j] = pixels[i * w + j];
+        }
+    }
+
+    int half = dimension/2;
+    for (uint i = (dimension/2); i < h - (dimension/2); ++i)
+    {
+        for (uint j = (dimension/2); j < w - (dimension/2); ++j)
+        {
+            double r = 0, g = 0, b = 0;
+            for (int k = -half; k <= half; k++) {
+                for (int l = -half; l <= half; l++) {
+                    r += double(pixels[((i+k) * w) + (j + l)].r) * kernel[(k+half)*dimension + l + half];
+                    g += double(pixels[((i+k) * w) + (j + l)].g) * kernel[(k+half)*dimension + l + half];
+                    b += double(pixels[((i+k) * w) + (j + l)].b) * kernel[(k+half)*dimension + l + half];
+                }
+            }
+            if (divident > 0) {
+                r /= divident;
+                g /= divident;
+                b /= divident;
+            }
+            if (r < 0) r = 0; if (r > 255) r = 255;
+            if (g < 0) g = 0; if (g > 255) g = 255;
+            if (b < 0) b = 0; if (b > 255) b = 255;
+            pixel_result[i * w + j] = Rgba(uint(int(r)), uint(int(g)), uint(int(b)), 0);
+        }
+    }
+
+    pixels = pixel_result;
+}
+
+void Image::cross_convolution(double kernel_x[], double kernel_y[], int dimension) {
+    Rgba *pixel_result = new Rgba[w * h];
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            pixel_result[i * w + j] = pixels[i * w + j];
+        }
+    }
+
+    int half = dimension/2;
+    for (uint i = (dimension/2); i < h - (dimension/2); ++i)
+    {
+        for (uint j = (dimension/2); j < w - (dimension/2); ++j)
+        {
+            double r_x = 0, g_x = 0, b_x = 0;
+            double r_y = 0, g_y = 0, b_y = 0;
+            for (int k = -half; k <= half; k++) {
+                for (int l = -half; l <= half; l++) {
+                    r_x += double(pixels[((i+k) * w) + (j + l)].r) * kernel_x[(k+half)*dimension + l + half];
+                    g_x += double(pixels[((i+k) * w) + (j + l)].g) * kernel_x[(k+half)*dimension + l + half];
+                    b_x += double(pixels[((i+k) * w) + (j + l)].b) * kernel_x[(k+half)*dimension + l + half];
+                    r_y += double(pixels[((i+k) * w) + (j + l)].r) * kernel_y[(k+half)*dimension + l + half];
+                    g_y += double(pixels[((i+k) * w) + (j + l)].g) * kernel_y[(k+half)*dimension + l + half];
+                    b_y += double(pixels[((i+k) * w) + (j + l)].b) * kernel_y[(k+half)*dimension + l + half];
+                }
+            }
+
+            uint r = uint(int(pow( (pow(r_x, 2) + pow(r_y, 2)) ,0.5)) ); if (r > 255) r = 255;
+            uint g = uint(int(pow( (pow(g_x, 2) + pow(g_y, 2)) ,0.5)) ); if (g > 255) g = 255;
+            uint b = uint(int(pow( (pow(b_x, 2) + pow(b_y, 2)) ,0.5)) ); if (b > 255) b = 255;
+            pixel_result[i * w + j] = Rgba(r, g, b, 0);
+        }
+    }
+
+    pixels = pixel_result;
+}
+
 void Image::save(char *filename)
 {
     char *token = filename;

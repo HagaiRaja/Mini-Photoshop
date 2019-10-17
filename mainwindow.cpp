@@ -691,6 +691,170 @@ void MainWindow::on_actionContrast_Stretching_triggered()
     }
 }
 
+void MainWindow::show_convolution(double kernel[], int dimension, double divident) {
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->konvolusi(kernel, dimension, divident);
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    string title = "Convolution - ";
+    QString title_info(title.c_str());
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_actionGaussian_2_triggered()
+{
+    double kernel[] = {
+        1, 2, 1,
+        2, 4, 2,
+        1, 2, 1
+    };
+
+    show_convolution(kernel, 3, 16);
+}
+
+void MainWindow::on_actionGaussian_triggered()
+{
+    double kernel[] = {
+        0, 1, 0,
+        1, -4, 1,
+        0, 1, 0
+    };
+
+    show_convolution(kernel, 3, 0);
+}
+
+void MainWindow::on_actionLaplace_triggered()
+{
+    double kernel[] = {
+        1, 1, 1,
+        1, -8, 1,
+        1, 1, 1
+    };
+
+    show_convolution(kernel, 3, 0);
+}
+
+void MainWindow::on_actionLoG_triggered()
+{
+    double gaussian_kernel[] = {
+        1, 2, 1,
+        2, 4, 2,
+        1, 2, 1
+    };
+
+    double laplace_kernel[] = {
+        1, 1, 1,
+        1, -8, 1,
+        1, 1, 1
+    };
+
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->konvolusi(gaussian_kernel, 3, 16);
+    picture->konvolusi(laplace_kernel, 3, 0);
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    string title = "Convolution - ";
+    QString title_info(title.c_str());
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_actionSobel_triggered()
+{
+    double kernel_x[] = {
+        -1, 0, 1,
+        -2, 0, 2,
+        -1, 0, 1
+    };
+
+    double kernel_y[] = {
+        1, 2, 1,
+        0, 0, 0,
+        -1, -2, -1
+    };
+
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->cross_convolution(kernel_x, kernel_y, 3);
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    string title = "Convolution - ";
+    QString title_info(title.c_str());
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_actionPrewitt_triggered()
+{
+    double kernel_x[] = {
+        -1, 0, 1,
+        -1, 0, 1,
+        -1, 0, 1
+    };
+
+    double kernel_y[] = {
+        1, 1, 1,
+        0, 0, 0,
+        -1, -1, -1
+    };
+
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->cross_convolution(kernel_x, kernel_y, 3);
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    string title = "Convolution - ";
+    QString title_info(title.c_str());
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
 void MainWindow::on_actionLog_Transformation_triggered()
 {
     LogTransformDialog dialog;
