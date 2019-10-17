@@ -64,7 +64,7 @@ public:
     void update_translate(bool from_ori);
     void reset();
     void median_filter(const uint xSize, const uint ySize);
-    void perform_convolution(int* filter, const uint filterXSize, const uint filterYSize);
+    void high_pass_filter(uint option);
 
     unsigned int w, h; // Image resolution
     int translate_x = 0, translate_y = 0;

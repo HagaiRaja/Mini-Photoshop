@@ -11,6 +11,7 @@
 #include "contrast_stretching_dialog.h"
 #include "logtransformdialog.h"
 #include "medianfilterdialog.h"
+#include "highpassfilterdialog.h"
 #include <cmath>
 #include <QtCharts>
 using namespace std;
@@ -924,4 +925,34 @@ void MainWindow::on_actionMedian_Filter_triggered()
         // And show the widget
         widget->show();
     }
+}
+
+void MainWindow::on_actionHigh_Pass_Filter_triggered()
+{
+    HighPassFilterDialog dialog;
+    dialog.setModal(true);
+    dialog.setWindowTitle("High Pass Filter");
+    if (dialog.exec() == QDialog::Accepted) {
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        widget->setLayout(gridLayout);
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+
+        picture->high_pass_filter(dialog.choice);
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        gridLayout->addWidget(label);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+        // Set the window title
+
+        QString title_info("High Pass Filter - ");
+        widget->setWindowTitle(title_info % fileTitle);
+        // And show the widget
+        widget->show();
+    }
+
 }

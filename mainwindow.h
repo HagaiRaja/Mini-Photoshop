@@ -124,9 +124,12 @@ private slots:
     void on_actionSobel_triggered();
 
     void on_actionPrewitt_triggered();
+
     void on_actionLog_Transformation_triggered();
 
     void on_actionMedian_Filter_triggered();
+
+    void on_actionHigh_Pass_Filter_triggered();
 
 private:
     Ui::MainWindow *ui;

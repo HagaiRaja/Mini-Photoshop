@@ -119,6 +119,7 @@
       <string>Convolutional</string>
      </property>
      <addaction name="actionMedian_Filter"/>
+     <addaction name="actionHigh_Pass_Filter"/>
     </widget>
     <addaction name="actionNegative"/>
     <addaction name="actionGrayscale"/>
@@ -420,6 +421,11 @@
   <action name="actionMedian_Filter">
    <property name="text">
     <string>Median Filter</string>
+   </property>
+  </action>
+  <action name="actionHigh_Pass_Filter">
+   <property name="text">
+    <string>High Pass Filter</string>
    </property>
   </action>
  </widget>

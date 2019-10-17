@@ -667,10 +667,8 @@ void Image::konvolusi(double kernel[], int dimension, double divident) {
                 g /= divident;
                 b /= divident;
             }
-            if (r < 0) r = 0; if (r > 255) r = 255;
-            if (g < 0) g = 0; if (g > 255) g = 255;
-            if (b < 0) b = 0; if (b > 255) b = 255;
-            pixel_result[i * w + j] = Rgba(uint(int(r)), uint(int(g)), uint(int(b)), 0);
+
+            pixel_result[i * w + j] = Rgba(threshold(static_cast<int>(r)), threshold(static_cast<int>(g)), threshold(static_cast<int>(b)), 0);
         }
     }
 
@@ -818,36 +816,65 @@ void Image::median_filter(const uint xSize, const uint ySize) {
     }
 }
 
-void Image::perform_convolution(int* filter, const uint filterXSize, const uint filterYSize) {
-    uint offsetX = static_cast<uint>(ceil(filterXSize/2)-1);
-    uint offsetY = static_cast<uint>(ceil(filterYSize/2)-1);
-    Rgba * temp = new Rgba[w * h];
-    for (uint i = 0 ; i < h ; i++) {
-        for (uint j = 0 ; j < w ; j++) {
-            temp[i*w+j] = pixels[i*w+j];
-        }
+void Image::high_pass_filter(uint option){
+    switch (option) {
+    case 1: {
+        double filter[] = {
+            -1, -1, -1,
+            -1, 8, -1,
+            -1, -1, -1,
+        };
+        konvolusi(filter, 3, 1);
+        break;
     }
-    for (uint i = offsetY; i < h - offsetY ; i++){
-        for (uint j = offsetX; j < w - offsetX ; j++) {
-            int currentPixelR = 0;
-            int currentPixelG = 0;
-            int currentPixelB = 0;
+    case 2: {
+        double filter[] = {
+            -1, -1, -1,
+            -1, 9, -1,
+            -1, -1, -1,
+        };
+        konvolusi(filter, 3, 1);
+        break;
+    }
+    case 3: {
+        double filter[] = {
+            0, -1, 0,
+            -1, 5, -1,
+            0, -1, 0,
+        };
+        konvolusi(filter, 3, 1);
+        break;
+    }
+    case 4: {
+        double filter[] = {
+            1, -2, 1,
+            -2, 5, -2,
+            1, -2, 1,
+        };
+        konvolusi(filter, 3, 1);
+        break;
+    }
 
-            for (uint k = 0 ; k < filterYSize; k++) {
-                for (uint l = 0 ; l < filterXSize; l++) {
-                    currentPixelR += filter[k*filterXSize+l] * temp[i*w+j].r;
-                    currentPixelG += filter[k*filterXSize+l] * temp[i*w+j].g;
-                    currentPixelB += filter[k*filterXSize+l] * temp[i*w+j].b;
-                }
-            }
-
-            pixels[i*w+j].r = threshold(currentPixelR);
-            pixels[i*w+j].g = threshold(currentPixelG);
-            pixels[i*w+j].b = threshold(currentPixelB);
-        }
+    case 5: {
+        double filter[] = {
+            1, -2, 1,
+            -2, 4, -2,
+            1, -2, 1,
+        };
+        konvolusi(filter, 3, 1);
+        break;
+    }
+    case 6: {
+        double filter[] = {
+            0, -1, 0,
+            -1, 4, -1,
+            0, -1, 0,
+        };
+        konvolusi(filter, 3, 1);
+        break;
+    }
     }
 }
-
 uint8_t Image::threshold(int x) {
     if (x>255) {
         return 255;
