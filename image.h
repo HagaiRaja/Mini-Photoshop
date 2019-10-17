@@ -53,6 +53,7 @@ public:
     void operation_arithmetic(Image *secondImage);
     void operation_not();
     void transform_gamma(double gamma, int constant);
+    void log_transform(const double constant, const bool inverse);
     void graylevel_slicing(int start, int end, bool preserve);
     void zoom(int percentage);
     void bit_slicing(uint kernel);

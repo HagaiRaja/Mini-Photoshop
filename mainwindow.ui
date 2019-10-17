@@ -32,7 +32,7 @@
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -112,6 +112,7 @@
      <addaction name="actionGraylevel_Slicing"/>
      <addaction name="menuBit_level_Slicing"/>
      <addaction name="actionContrast_Stretching"/>
+     <addaction name="actionLog_Transformation"/>
     </widget>
     <addaction name="actionNegative"/>
     <addaction name="actionGrayscale"/>
@@ -336,6 +337,11 @@
   <action name="actionContrast_Stretching">
    <property name="text">
     <string>Contrast Stretching</string>
+   </property>
+  </action>
+  <action name="actionLog_Transformation">
+   <property name="text">
+    <string>Log Transformation</string>
    </property>
   </action>
  </widget>

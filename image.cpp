@@ -498,6 +498,33 @@ void Image::transform_gamma(double gamma, int constant) {
 //    cout << gamma << " " << constant << endl;
 }
 
+void Image::log_transform(const double constant, const bool inverse) {
+    for(uint i = 0 ; i < h ; i++){
+        for(uint j = 0 ; j < w ; j++) {
+            int logR;
+            int logG;
+            int logB;
+            if(!inverse) {
+                logR = static_cast<int>(constant * log(1+pixels[i*w+j].r));
+                logG = static_cast<int>(constant * log(1+pixels[i*w+j].g));
+                logB = static_cast<int>(constant * log(1+pixels[i*w+j].b));
+            } else {
+                logR = static_cast<int>(pow(10,pixels[i*w+j].r/constant)-1);
+                logG = static_cast<int>(pow(10,pixels[i*w+j].g/constant)-1);
+                logB = static_cast<int>(pow(10,pixels[i*w+j].b/constant)-1);
+            }
+
+            logR = (logR > 255)? 255 : logR;
+            logR = (logR < 0)? 0 : logR;
+            logG = (logG > 255)? 255 : logG;
+            logG = (logG < 0)? 0 : logG;
+            logB = (logB > 255)? 255 : logB;
+            logB = (logB < 0)? 0 : logB;
+            pixels[i * w + j] = Rgba(static_cast<uint8_t>(logR), static_cast<uint8_t>(logG), static_cast<uint8_t>(logB), 0);
+        }
+    }
+}
+
 void Image::graylevel_slicing(int start, int end, bool preserve) {
     for (uint i = 0; i < h; ++i)
     {
