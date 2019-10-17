@@ -662,3 +662,80 @@ void Image::save(char *filename)
         fclose(pgmimg);
     }
 }
+
+void Image::median_filter(const uint xSize, const uint ySize) {
+    uint offsetX = static_cast<uint>(((xSize+1)/2)-1);
+    uint offsetY = static_cast<uint>(((ySize+1)/2)-1);
+    uint8_t** medianWindow = new uint8_t*[3];
+    for(uint i = 0 ; i < 3 ; i++) medianWindow[i] = new uint8_t[xSize*ySize];
+
+    Rgba * temp = new Rgba[w * h];
+    for (uint i = 0 ; i < h ; i++) {
+        for (uint j = 0 ; j < w ; j++) {
+            temp[i*w+j].r = pixels[i*w+j].r;
+            temp[i*w+j].g = pixels[i*w+j].g;
+            temp[i*w+j].b = pixels[i*w+j].b;
+        }
+    }
+    for (uint i = offsetY; i < h - offsetY ; i++){
+        for (uint j = offsetX; j < w - offsetX ; j++) {
+
+            for (uint k = 0 ; k < ySize; k++) {
+                for (uint l = 0 ; l < xSize; l++) {
+                    medianWindow[0][k*xSize+l]=temp[(i+k-offsetY)*w + (j+l-offsetX)].r;
+                    medianWindow[1][k*xSize+l]=temp[(i+k-offsetY)*w + (j+l-offsetX)].g;
+                    medianWindow[2][k*xSize+l]=temp[(i+k-offsetY)*w + (j+l-offsetX)].b;
+                }
+            }
+
+            sort(medianWindow[0], medianWindow[0]+(xSize*ySize)-1);
+            sort(medianWindow[1], medianWindow[1]+(xSize*ySize)-1);
+            sort(medianWindow[2], medianWindow[2]+(xSize*ySize)-1);
+
+
+            pixels[i*w+j].r = medianWindow[0][static_cast<uint>((xSize*ySize)/2)];
+            pixels[i*w+j].g = medianWindow[1][static_cast<uint>((xSize*ySize)/2)];
+            pixels[i*w+j].b = medianWindow[2][static_cast<uint>((xSize*ySize)/2)];
+        }
+    }
+}
+
+void Image::perform_convolution(int* filter, const uint filterXSize, const uint filterYSize) {
+    uint offsetX = static_cast<uint>(ceil(filterXSize/2)-1);
+    uint offsetY = static_cast<uint>(ceil(filterYSize/2)-1);
+    Rgba * temp = new Rgba[w * h];
+    for (uint i = 0 ; i < h ; i++) {
+        for (uint j = 0 ; j < w ; j++) {
+            temp[i*w+j] = pixels[i*w+j];
+        }
+    }
+    for (uint i = offsetY; i < h - offsetY ; i++){
+        for (uint j = offsetX; j < w - offsetX ; j++) {
+            int currentPixelR = 0;
+            int currentPixelG = 0;
+            int currentPixelB = 0;
+
+            for (uint k = 0 ; k < filterYSize; k++) {
+                for (uint l = 0 ; l < filterXSize; l++) {
+                    currentPixelR += filter[k*filterXSize+l] * temp[i*w+j].r;
+                    currentPixelG += filter[k*filterXSize+l] * temp[i*w+j].g;
+                    currentPixelB += filter[k*filterXSize+l] * temp[i*w+j].b;
+                }
+            }
+
+            pixels[i*w+j].r = threshold(currentPixelR);
+            pixels[i*w+j].g = threshold(currentPixelG);
+            pixels[i*w+j].b = threshold(currentPixelB);
+        }
+    }
+}
+
+uint8_t Image::threshold(int x) {
+    if (x>255) {
+        return 255;
+    } else if (x<0) {
+        return 0;
+    } else {
+        return static_cast<uint8_t>(x);
+    }
+}

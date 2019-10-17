@@ -60,7 +60,8 @@ public:
     void save(char* filename);
     void update_translate(bool from_ori);
     void reset();
-
+    void median_filter(const uint xSize, const uint ySize);
+    void perform_convolution(int* filter, const uint filterXSize, const uint filterYSize);
 
     unsigned int w, h; // Image resolution
     int translate_x = 0, translate_y = 0;
@@ -68,6 +69,8 @@ public:
     static const Rgba kBlack, kWhite, kRed, kGreen, kBlue; // Preset colors
 
 private:
+    uint8_t threshold(int x);
+
 
 };
 

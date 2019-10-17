@@ -4,11 +4,12 @@
 #include <QDebug>
 #include <iostream>
 #include <QStringBuilder>
-#include <brightnessslider.h>
+#include "brightnessslider.h"
 #include "translate_dialog.h"
 #include "power_transform_dialog.h"
 #include "graylevel_slicing_dialog.h"
 #include "logtransformdialog.h"
+#include "medianfilterdialog.h"
 #include <cmath>
 using namespace std;
 
@@ -658,8 +659,6 @@ void MainWindow::on_actionLog_Transformation_triggered()
 
     if(dialog.exec() == QDialog::Accepted) //Check if they clicked Ok
     {
-        fflush(stdout);
-
         // Create a widget that will be a window
         QWidget *widget = new QWidget(mdiArea);
         // Adding layout to it
@@ -683,6 +682,35 @@ void MainWindow::on_actionLog_Transformation_triggered()
             widget->setWindowTitle(inverse % title_info % fileTitle);
         }
 
+        // And show the widget
+        widget->show();
+    }
+}
+
+void MainWindow::on_actionMedian_Filter_triggered() {
+    MedianFilterDialog dialog;
+    dialog.setModal(true);
+    dialog.setWindowTitle("Median Filter");
+    if(dialog.exec() == QDialog::Accepted)
+    {
+        printf("%d %d\n", dialog.xSize,dialog.ySize);
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        widget->setLayout(gridLayout);
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+
+        picture->median_filter(dialog.xSize,dialog.ySize);
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        gridLayout->addWidget(label);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+        // Set the window title
+        QString title_info = "Median Filter - ";
+        widget->setWindowTitle(title_info % fileTitle);
         // And show the widget
         widget->show();
     }

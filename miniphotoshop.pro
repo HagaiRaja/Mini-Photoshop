@@ -29,6 +29,7 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     image.cpp \
+    medianfilterdialog.cpp \
     translate_dialog.cpp \
     power_transform_dialog.cpp \
     graylevel_slicing_dialog.cpp
@@ -38,6 +39,7 @@ HEADERS += \
     logtransformdialog.h \
         mainwindow.h \
     image.h \
+    medianfilterdialog.h \
     translate_dialog.h \
     power_transform_dialog.h \
     graylevel_slicing_dialog.h
@@ -46,6 +48,7 @@ FORMS += \
         brightnessslider.ui \
     logtransformdialog.ui \
         mainwindow.ui \
+    medianfilterdialog.ui \
     translate_dialog.ui \
     power_transform_dialog.ui \
     graylevel_slicing_dialog.ui
