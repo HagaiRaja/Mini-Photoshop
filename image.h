@@ -56,6 +56,7 @@ public:
     void graylevel_slicing(int start, int end, bool preserve);
     void zoom(int percentage);
     void bit_slicing(uint kernel);
+    void contrast_stretching(int x1, int y1, int x2, int y2);
     void save(char* filename);
     void update_translate(bool from_ori);
     void reset();

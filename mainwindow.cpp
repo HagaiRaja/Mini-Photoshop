@@ -8,7 +8,9 @@
 #include "translate_dialog.h"
 #include "power_transform_dialog.h"
 #include "graylevel_slicing_dialog.h"
+#include "contrast_stretching_dialog.h"
 #include <cmath>
+#include <QtCharts>
 using namespace std;
 
 const QString picturesFolder = "/home/hagairaja/Documents/Pengcit/miniphotoshop/test";
@@ -646,5 +648,35 @@ void MainWindow::on_actionAll_triggered()
     for (int i = 0; i < 8; i++) {
         showBitSlicing(uint(pow(2, i)), i);
         picture->reset();
+    }
+}
+
+void MainWindow::on_actionContrast_Stretching_triggered()
+{
+    Contrast_stretching_dialog dialog_stretching;
+    dialog_stretching.setModal(true);
+    dialog_stretching.setWindowTitle("Contrast Stretching");
+
+    if(dialog_stretching.exec() == QDialog::Accepted) //Check if they clicked Ok
+    {
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        widget->setLayout(gridLayout);
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+
+        picture->contrast_stretching(dialog_stretching.x1, dialog_stretching.y1, dialog_stretching.x2, dialog_stretching.y2);
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        gridLayout->addWidget(label);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+        // Set the window title
+        QString title_info("Gray-level Slicing result - ");
+        widget->setWindowTitle(title_info % fileTitle);
+        // And show the widget
+        widget->show();
     }
 }

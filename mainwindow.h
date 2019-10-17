@@ -108,6 +108,8 @@ private slots:
 
     void on_actionAll_triggered();
 
+    void on_actionContrast_Stretching_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMdiArea * mdiArea;  // Area in which windows will be added

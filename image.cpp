@@ -570,6 +570,48 @@ void Image::zoom(int percentage) {
     pixels = pixel_result;
 }
 
+void Image::contrast_stretching(int x1, int y1, int x2, int y2) {
+    uint transform_table[256];
+    double calc;
+    uint temp;
+
+    // making table
+    for (int i = 0; i < 256; i++) {
+        if (i < x1) {
+            calc = (double(y1)) / (double(x1)) * double(i);
+        }
+        else if (i >= x1 && i < x2) {
+            calc = ((((double) (y1 - y2)) / ((double) (x1 - x2))) * i) +
+                    double(y1) - ((((double) (y1 - y2)) / ((double) (x1 - x2))) * x1);
+        }
+        else {
+            calc = ((((double) (255 - y2)) / ((double) (255 - x2))) * i) +
+                    double(255) - ((((double) (255 - y2)) / ((double) (255 - x2))) * 255);
+        }
+        temp = (uint) calc;
+        if (temp < 0) temp = 0;
+        if (temp > 255) temp = 255;
+        transform_table[i] = temp;
+        cout << i << " " << temp << endl;
+        fflush(stdout);
+    }
+
+    // updating rgb
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i * w + j];
+            pixels[i * w + j] = Rgba(
+                        transform_table[(int) temp.r],
+                        transform_table[(int) temp.g],
+                        transform_table[(int) temp.b],
+                        temp.a
+                    );
+        }
+    }
+}
+
 void Image::save(char *filename)
 {
     char *token = filename;
