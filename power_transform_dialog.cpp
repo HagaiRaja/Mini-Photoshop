@@ -1,7 +1,6 @@
 #include "power_transform_dialog.h"
 #include "ui_power_transform_dialog.h"
-#include <QIntValidator>
-#include <QDoubleValidator>
+#include <QValidator>
 
 Power_transform_dialog::Power_transform_dialog(QWidget *parent) :
     QDialog(parent),
