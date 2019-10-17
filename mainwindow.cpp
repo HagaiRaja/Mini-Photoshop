@@ -9,6 +9,7 @@
 #include "power_transform_dialog.h"
 #include "graylevel_slicing_dialog.h"
 #include "contrast_stretching_dialog.h"
+#include "logtransformdialog.h"
 #include <cmath>
 #include <QtCharts>
 using namespace std;
@@ -17,13 +18,12 @@ const QString picturesFolder = "/home/hagairaja/Documents/Pengcit/miniphotoshop/
 Image *picture;
 QString fileTitle;
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
+                                          ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    mdiArea = new QMdiArea(this);  // init QMdiArea
+    mdiArea = new QMdiArea(this); // init QMdiArea
     // configure scrollbars
     mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -43,7 +43,8 @@ void MainWindow::on_actionOpen_triggered()
     QString fileName = QFileDialog::getOpenFileName(this, "Open the file", path,
                                                     tr("Image (*.pgm *.ppm *.pbm *.bmp *.raw)"));
     QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly | QFile::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QFile::Text))
+    {
         QMessageBox::warning(this, "Warning", "Cannot open file : " + file.errorString());
         return;
     }
@@ -66,8 +67,8 @@ void MainWindow::on_actionOpen_triggered()
     // Adding a widget as a sub window in the Mdi Area
     mdiArea->addSubWindow(widget);
     // Set the window title
-    QStringList pieces = fileName.split( "/" );
-    fileTitle = pieces.value( pieces.length() - 1 );
+    QStringList pieces = fileName.split("/");
+    fileTitle = pieces.value(pieces.length() - 1);
     widget->setWindowTitle(fileTitle);
     // And show the widget
     widget->show();
@@ -79,7 +80,8 @@ void MainWindow::on_actionSave_As_triggered()
 {
     QString fileName = QFileDialog::getSaveFileName(this, "Save as");
     QFile file(fileName);
-    if (!file.open(QFile::WriteOnly | QFile::Text)) {
+    if (!file.open(QFile::WriteOnly | QFile::Text))
+    {
         QMessageBox::warning(this, "Warning", "Cannot save file : " + file.errorString());
         return;
     }
@@ -87,8 +89,8 @@ void MainWindow::on_actionSave_As_triggered()
     QByteArray ba = fileName.toLocal8Bit();
     char *c_str2 = ba.data();
     picture->save(c_str2);
-    QStringList pieces = fileName.split( "/" );
-    fileTitle = pieces.value( pieces.length() - 1 );
+    QStringList pieces = fileName.split("/");
+    fileTitle = pieces.value(pieces.length() - 1);
     setWindowTitle(fileTitle);
     file.close();
 }
@@ -236,12 +238,14 @@ void MainWindow::on_actionRotate_91_triggered()
     widget->show();
 }
 
-void MainWindow::on_actionBrightness_triggered() {
+void MainWindow::on_actionBrightness_triggered()
+{
     brightnessSlider bSlider;
     bSlider.setModal(true);
     bSlider.setWindowTitle("Add Brigthness Value");
 
-    if (bSlider.exec() == QDialog::Accepted) {
+    if (bSlider.exec() == QDialog::Accepted)
+    {
         // Create a widget that will be a window
         QWidget *widget = new QWidget(mdiArea);
         // Adding layout to it
@@ -263,13 +267,15 @@ void MainWindow::on_actionBrightness_triggered() {
     }
 }
 
-Image* MainWindow::open_second_image() {
+Image *MainWindow::open_second_image()
+{
     QDir dir1(picturesFolder);
     QString path = (dir1.exists()) ? picturesFolder : QDir::currentPath();
     QString fileName = QFileDialog::getOpenFileName(this, "Open the file", path,
                                                     tr("Image (*.pgm *.ppm *.pbm *.bmp *.raw)"));
     QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly | QFile::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QFile::Text))
+    {
         QMessageBox::warning(this, "Warning", "Cannot open file : " + file.errorString());
         return NULL;
     }
@@ -292,8 +298,8 @@ Image* MainWindow::open_second_image() {
     // Adding a widget as a sub window in the Mdi Area
     mdiArea->addSubWindow(widget);
     // Set the window title
-    QStringList pieces = fileName.split( "/" );
-    QString secondFileTitle = pieces.value( pieces.length() - 1 );
+    QStringList pieces = fileName.split("/");
+    QString secondFileTitle = pieces.value(pieces.length() - 1);
     widget->setWindowTitle(secondFileTitle);
     // And show the widget
     widget->show();
@@ -408,7 +414,7 @@ void MainWindow::on_actionTranslate_triggered()
     translate_dialog.setWindowTitle("Translate Image");
     translate_dialog.setTranslateRange(picture->w, picture->h, picture->translate_x, picture->translate_y);
 
-    if(translate_dialog.exec() == QDialog::Accepted) //Check if they clicked Ok
+    if (translate_dialog.exec() == QDialog::Accepted) //Check if they clicked Ok
     {
         cout << translate_dialog.translateX << " " << translate_dialog.translateY << endl;
         fflush(stdout);
@@ -437,7 +443,8 @@ void MainWindow::on_actionTranslate_triggered()
     }
 }
 
-void MainWindow::showZoom(int percentage) {
+void MainWindow::showZoom(int percentage)
+{
     // Create a widget that will be a window
     QWidget *widget = new QWidget(mdiArea);
     // Adding layout to it
@@ -513,7 +520,7 @@ void MainWindow::on_actionPower_triggered()
     transform_dialog.setModal(true);
     transform_dialog.setWindowTitle("Power Transform Image");
 
-    if(transform_dialog.exec() == QDialog::Accepted) //Check if they clicked Ok
+    if (transform_dialog.exec() == QDialog::Accepted) //Check if they clicked Ok
     {
         cout << transform_dialog.gamma << " " << transform_dialog.constant << endl;
         fflush(stdout);
@@ -546,7 +553,7 @@ void MainWindow::on_actionGraylevel_Slicing_triggered()
     dialog.setModal(true);
     dialog.setWindowTitle("Gray-level Slicing");
 
-    if(dialog.exec() == QDialog::Accepted) //Check if they clicked Ok
+    if (dialog.exec() == QDialog::Accepted) //Check if they clicked Ok
     {
         cout << dialog.start << " " << dialog.end << " " << dialog.preserve << endl;
         fflush(stdout);
@@ -573,7 +580,8 @@ void MainWindow::on_actionGraylevel_Slicing_triggered()
     }
 }
 
-void MainWindow::showBitSlicing(uint kernel, int level) {
+void MainWindow::showBitSlicing(uint kernel, int level)
+{
     // Create a widget that will be a window
     QWidget *widget = new QWidget(mdiArea);
     // Adding layout to it
@@ -645,7 +653,8 @@ void MainWindow::on_actionReset_triggered()
 
 void MainWindow::on_actionAll_triggered()
 {
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++)
+    {
         showBitSlicing(uint(pow(2, i)), i);
         picture->reset();
     }
@@ -657,7 +666,7 @@ void MainWindow::on_actionContrast_Stretching_triggered()
     dialog_stretching.setModal(true);
     dialog_stretching.setWindowTitle("Contrast Stretching");
 
-    if(dialog_stretching.exec() == QDialog::Accepted) //Check if they clicked Ok
+    if (dialog_stretching.exec() == QDialog::Accepted) //Check if they clicked Ok
     {
         // Create a widget that will be a window
         QWidget *widget = new QWidget(mdiArea);
@@ -674,7 +683,7 @@ void MainWindow::on_actionContrast_Stretching_triggered()
         // Adding a widget as a sub window in the Mdi Area
         mdiArea->addSubWindow(widget);
         // Set the window title
-        QString title_info("Gray-level Slicing result - ");
+        QString title_info("Contrast Stretching - ");
         widget->setWindowTitle(title_info % fileTitle);
         // And show the widget
         widget->show();
@@ -845,3 +854,42 @@ void MainWindow::on_actionPrewitt_triggered()
     // And show the widget
     widget->show();
 }
+void MainWindow::on_actionLog_Transformation_triggered()
+{
+    LogTransformDialog dialog;
+    dialog.setModal(true);
+    dialog.setWindowTitle("Log Transformation");
+
+    if (dialog.exec() == QDialog::Accepted) //Check if they clicked Ok
+    {
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        widget->setLayout(gridLayout);
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+
+        picture->log_transform(dialog.constant, dialog.inverse);
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        gridLayout->addWidget(label);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+
+        // Adding a widget as a sub window in the Mdi Area
+        // Set the window title
+        QString inverse("Inverse ");
+        QString title_info("Log Transformation - ");
+        if (!dialog.inverse) {
+            widget->setWindowTitle(inverse % title_info % fileTitle);
+        } else {
+            widget->setWindowTitle(title_info % fileTitle);
+        }
+
+        // And show the widget
+        widget->show();
+    }
+
+}
+
