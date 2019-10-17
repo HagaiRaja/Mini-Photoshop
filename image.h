@@ -58,6 +58,8 @@ public:
     void bit_slicing(uint kernel);
     void contrast_stretching(int x1, int y1, int x2, int y2);
     void save(char* filename);
+    void konvolusi(double kernel[], int dimension, double divident);
+    void cross_convolution(double kernel_x[], double kernel_y[], int dimension);
     void update_translate(bool from_ori);
     void reset();
 

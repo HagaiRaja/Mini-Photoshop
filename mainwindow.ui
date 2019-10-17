@@ -120,9 +120,30 @@
     <addaction name="actionBrightness"/>
     <addaction name="menuTransform_2"/>
    </widget>
+   <widget class="QMenu" name="menuDetection">
+    <property name="title">
+     <string>Detection</string>
+    </property>
+    <widget class="QMenu" name="menuEdge">
+     <property name="title">
+      <string>Edge</string>
+     </property>
+     <addaction name="actionGradient"/>
+     <addaction name="actionGaussian"/>
+     <addaction name="actionLaplace"/>
+     <addaction name="actionLoG"/>
+     <addaction name="actionSobel"/>
+     <addaction name="actionPrewitt"/>
+     <addaction name="actionRoberts"/>
+     <addaction name="actionCanny"/>
+    </widget>
+    <addaction name="menuEdge"/>
+    <addaction name="actionGaussian_2"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuAction"/>
+   <addaction name="menuDetection"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -336,6 +357,51 @@
   <action name="actionContrast_Stretching">
    <property name="text">
     <string>Contrast Stretching</string>
+   </property>
+  </action>
+  <action name="actionGaussian">
+   <property name="text">
+    <string>2nd Derivative</string>
+   </property>
+  </action>
+  <action name="actionGaussian_2">
+   <property name="text">
+    <string>Gaussian</string>
+   </property>
+  </action>
+  <action name="actionLaplace">
+   <property name="text">
+    <string>Laplace</string>
+   </property>
+  </action>
+  <action name="actionLoG">
+   <property name="text">
+    <string>LoG</string>
+   </property>
+  </action>
+  <action name="actionSobel">
+   <property name="text">
+    <string>Sobel</string>
+   </property>
+  </action>
+  <action name="actionPrewitt">
+   <property name="text">
+    <string>Prewitt</string>
+   </property>
+  </action>
+  <action name="actionRoberts">
+   <property name="text">
+    <string>Roberts</string>
+   </property>
+  </action>
+  <action name="actionCanny">
+   <property name="text">
+    <string>Canny</string>
+   </property>
+  </action>
+  <action name="actionGradient">
+   <property name="text">
+    <string>Gradient</string>
    </property>
   </action>
  </widget>

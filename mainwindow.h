@@ -110,6 +110,20 @@ private slots:
 
     void on_actionContrast_Stretching_triggered();
 
+    void on_actionGaussian_2_triggered();
+
+    void show_convolution(double kernel[], int dimension, double divident);
+
+    void on_actionGaussian_triggered();
+
+    void on_actionLaplace_triggered();
+
+    void on_actionLoG_triggered();
+
+    void on_actionSobel_triggered();
+
+    void on_actionPrewitt_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMdiArea * mdiArea;  // Area in which windows will be added
