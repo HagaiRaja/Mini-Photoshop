@@ -15,7 +15,8 @@
 #include <QDialogButtonBox>
 #include "image.h"
 
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 
@@ -52,7 +53,7 @@ private slots:
 
     void on_actionAND_triggered();
 
-    Image* open_second_image();
+    Image *open_second_image();
 
     void on_actionNOT_triggered();
 
@@ -84,7 +85,7 @@ private slots:
 
     void on_actionGraylevel_Slicing_triggered();
 
-    void on_actionBit_level_Slicing_triggered(){}
+    void on_actionBit_level_Slicing_triggered() {}
 
     void showBitSlicing(uint kernel, int level);
 
@@ -108,13 +109,15 @@ private slots:
 
     void on_actionAll_triggered();
 
+    void on_actionContrast_Stretching_triggered();
+
     void on_actionLog_Transformation_triggered();
 
     void on_actionMedian_Filter_triggered();
 
 private:
     Ui::MainWindow *ui;
-    QMdiArea * mdiArea;  // Area in which windows will be added
+    QMdiArea *mdiArea; // Area in which windows will be added
 };
 
 #endif // MAINWINDOW_H

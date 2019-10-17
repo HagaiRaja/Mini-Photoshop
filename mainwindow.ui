@@ -111,6 +111,7 @@
      <addaction name="actionPower"/>
      <addaction name="actionGraylevel_Slicing"/>
      <addaction name="menuBit_level_Slicing"/>
+     <addaction name="actionContrast_Stretching"/>
      <addaction name="actionLog_Transformation"/>
     </widget>
     <widget class="QMenu" name="menuConvolutional">
@@ -338,6 +339,11 @@
   <action name="actionAll">
    <property name="text">
     <string>All</string>
+   </property>
+  </action>
+  <action name="actionContrast_Stretching">
+   <property name="text">
+    <string>Contrast Stretching</string>
    </property>
   </action>
   <action name="actionLog_Transformation">

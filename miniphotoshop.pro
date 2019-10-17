@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui printsupport
+QT       += core gui printsupport charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -32,7 +32,8 @@ SOURCES += \
     medianfilterdialog.cpp \
     translate_dialog.cpp \
     power_transform_dialog.cpp \
-    graylevel_slicing_dialog.cpp
+    graylevel_slicing_dialog.cpp \
+    contrast_stretching_dialog.cpp
 
 HEADERS += \
     brightnessslider.h \
@@ -42,7 +43,8 @@ HEADERS += \
     medianfilterdialog.h \
     translate_dialog.h \
     power_transform_dialog.h \
-    graylevel_slicing_dialog.h
+    graylevel_slicing_dialog.h \
+    contrast_stretching_dialog.h
 
 FORMS += \
         brightnessslider.ui \
@@ -51,7 +53,8 @@ FORMS += \
     medianfilterdialog.ui \
     translate_dialog.ui \
     power_transform_dialog.ui \
-    graylevel_slicing_dialog.ui
+    graylevel_slicing_dialog.ui \
+    contrast_stretching_dialog.ui
 
 RESOURCES += \
     resources.qrc
