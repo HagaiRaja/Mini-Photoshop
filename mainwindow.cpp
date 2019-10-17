@@ -10,6 +10,7 @@
 #include "graylevel_slicing_dialog.h"
 #include "contrast_stretching_dialog.h"
 #include "logtransformdialog.h"
+#include "canny_dialog.h"
 #include <cmath>
 #include <QtCharts>
 using namespace std;
@@ -690,7 +691,7 @@ void MainWindow::on_actionContrast_Stretching_triggered()
     }
 }
 
-void MainWindow::show_convolution(double kernel[], int dimension, double divident) {
+void MainWindow::show_convolution(double kernel[], int dimension, double divident, string name) {
     // Create a widget that will be a window
     QWidget *widget = new QWidget(mdiArea);
     // Adding layout to it
@@ -706,7 +707,8 @@ void MainWindow::show_convolution(double kernel[], int dimension, double dividen
     // Adding a widget as a sub window in the Mdi Area
     mdiArea->addSubWindow(widget);
     // Set the window title
-    string title = "Convolution - ";
+    string title = "Convolution ";
+    title += name + " - ";
     QString title_info(title.c_str());
     widget->setWindowTitle(title_info % fileTitle);
     // And show the widget
@@ -721,7 +723,7 @@ void MainWindow::on_actionGaussian_2_triggered()
         1, 2, 1
     };
 
-    show_convolution(kernel, 3, 16);
+    show_convolution(kernel, 3, 16, "Gaussian");
 }
 
 void MainWindow::on_actionGaussian_triggered()
@@ -732,7 +734,7 @@ void MainWindow::on_actionGaussian_triggered()
         0, 1, 0
     };
 
-    show_convolution(kernel, 3, 0);
+    show_convolution(kernel, 3, 0, "2nd Derivatives");
 }
 
 void MainWindow::on_actionLaplace_triggered()
@@ -743,7 +745,7 @@ void MainWindow::on_actionLaplace_triggered()
         1, 1, 1
     };
 
-    show_convolution(kernel, 3, 0);
+    show_convolution(kernel, 3, 0, "Laplace");
 }
 
 void MainWindow::on_actionLoG_triggered()
@@ -776,7 +778,7 @@ void MainWindow::on_actionLoG_triggered()
     // Adding a widget as a sub window in the Mdi Area
     mdiArea->addSubWindow(widget);
     // Set the window title
-    string title = "Convolution - ";
+    string title = "Convolution LoG - ";
     QString title_info(title.c_str());
     widget->setWindowTitle(title_info % fileTitle);
     // And show the widget
@@ -812,7 +814,7 @@ void MainWindow::on_actionSobel_triggered()
     // Adding a widget as a sub window in the Mdi Area
     mdiArea->addSubWindow(widget);
     // Set the window title
-    string title = "Convolution - ";
+    string title = "Convolution Sobel - ";
     QString title_info(title.c_str());
     widget->setWindowTitle(title_info % fileTitle);
     // And show the widget
@@ -848,7 +850,7 @@ void MainWindow::on_actionPrewitt_triggered()
     // Adding a widget as a sub window in the Mdi Area
     mdiArea->addSubWindow(widget);
     // Set the window title
-    string title = "Convolution - ";
+    string title = "Convolution Prewitt - ";
     QString title_info(title.c_str());
     widget->setWindowTitle(title_info % fileTitle);
     // And show the widget
@@ -893,3 +895,110 @@ void MainWindow::on_actionLog_Transformation_triggered()
 
 }
 
+
+void MainWindow::on_actionRoberts_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    picture->roberts();
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    string title = "Convolution Roberts - ";
+    QString title_info(title.c_str());
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+void MainWindow::on_actionCanny_triggered()
+{
+    Canny_dialog dialog_canny;
+    dialog_canny.setModal(true);
+    dialog_canny.setWindowTitle("Pick Canny Treshold");
+
+    if (dialog_canny.exec() == QDialog::Accepted) //Check if they clicked Ok
+    {
+        double gaussian_kernel[] = {
+            1, 2, 1,
+            2, 4, 2,
+            1, 2, 1
+        };
+
+        double kernel_x[] = {
+            -1, 0, 1,
+            -2, 0, 2,
+            -1, 0, 1
+        };
+
+        double kernel_y[] = {
+            1, 2, 1,
+            0, 0, 0,
+            -1, -2, -1
+        };
+
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        widget->setLayout(gridLayout);
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+
+        picture->konvolusi(gaussian_kernel, 3, 16);
+        picture->cross_convolution(kernel_x, kernel_y, 3);
+        picture->to_biner(dialog_canny.threshold);
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        gridLayout->addWidget(label);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+        // Set the window title
+        string title = "Convolution Canny - ";
+        QString title_info(title.c_str());
+        widget->setWindowTitle(title_info % fileTitle);
+        // And show the widget
+        widget->show();
+    }
+}
+
+void MainWindow::on_actionGradient_triggered()
+{
+    Canny_dialog dialog_gradient;
+    dialog_gradient.setModal(true);
+    dialog_gradient.setWindowTitle("Pick Gradient Treshold");
+
+    if (dialog_gradient.exec() == QDialog::Accepted) //Check if they clicked Ok
+    {
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        widget->setLayout(gridLayout);
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+
+        picture->gradient();
+        picture->to_biner(dialog_gradient.threshold);
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        gridLayout->addWidget(label);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+        // Set the window title
+        string title = "Convolution Gradient - ";
+        QString title_info(title.c_str());
+        widget->setWindowTitle(title_info % fileTitle);
+        // And show the widget
+        widget->show();
+    }
+}

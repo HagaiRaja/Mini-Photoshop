@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <string>
 #include <QFile>
 #include <QFileDialog>
 #include <QTextStream>
@@ -14,6 +14,7 @@
 #include <QSlider>
 #include <QDialogButtonBox>
 #include "image.h"
+using namespace std;
 
 namespace Ui
 {
@@ -113,7 +114,7 @@ private slots:
 
     void on_actionGaussian_2_triggered();
 
-    void show_convolution(double kernel[], int dimension, double divident);
+    void show_convolution(double kernel[], int dimension, double divident, string name);
 
     void on_actionGaussian_triggered();
 
@@ -125,6 +126,12 @@ private slots:
 
     void on_actionPrewitt_triggered();
     void on_actionLog_Transformation_triggered();
+
+    void on_actionRoberts_triggered();
+
+    void on_actionCanny_triggered();
+
+    void on_actionGradient_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -32,7 +32,8 @@ SOURCES += \
     translate_dialog.cpp \
     power_transform_dialog.cpp \
     graylevel_slicing_dialog.cpp \
-    contrast_stretching_dialog.cpp
+    contrast_stretching_dialog.cpp \
+    canny_dialog.cpp
 
 HEADERS += \
     brightnessslider.h \
@@ -42,7 +43,8 @@ HEADERS += \
     translate_dialog.h \
     power_transform_dialog.h \
     graylevel_slicing_dialog.h \
-    contrast_stretching_dialog.h
+    contrast_stretching_dialog.h \
+    canny_dialog.h
 
 FORMS += \
         brightnessslider.ui \
@@ -51,7 +53,8 @@ FORMS += \
     translate_dialog.ui \
     power_transform_dialog.ui \
     graylevel_slicing_dialog.ui \
-    contrast_stretching_dialog.ui
+    contrast_stretching_dialog.ui \
+    canny_dialog.ui
 
 RESOURCES += \
     resources.qrc

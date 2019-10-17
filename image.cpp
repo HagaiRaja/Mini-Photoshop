@@ -715,6 +715,90 @@ void Image::cross_convolution(double kernel_x[], double kernel_y[], int dimensio
     pixels = pixel_result;
 }
 
+void Image::roberts() {
+    Rgba *pixel_result = new Rgba[w * h], xy, x1y, xy1, x1y1;
+    int r_plus_r, r_minus_r, r_plus_g, r_minus_g, r_plus_b, r_minus_b;
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            if (i  == h - 1 || j == w - 1) {
+                pixel_result[i * w + j] = pixels[i * w + j];
+            }
+            else {
+                xy = pixels[(i * w) + j];
+                x1y = pixels[((i+1) * w) + j];
+                xy1 = pixels[(i * w) + j + 1];
+                x1y1 = pixels[((i+1) * w) + j + 1];
+                r_plus_r = int(x1y1.r) - int(xy.r); if (r_plus_r < 0) r_plus_r *= -1;
+                r_plus_g = int(x1y1.g) - int(xy.g); if (r_plus_g < 0) r_plus_g *= -1;
+                r_plus_b = int(x1y1.b) - int(xy.b); if (r_plus_b < 0) r_plus_b *= -1;
+                r_minus_r = int(xy1.r) - int(x1y.r); if (r_minus_r < 0) r_minus_r *= -1;
+                r_minus_g = int(xy1.g) - int(x1y.g); if (r_minus_g < 0) r_minus_g *= -1;
+                r_minus_b = int(xy1.b) - int(x1y.b); if (r_minus_b < 0) r_minus_b *= -1;
+//                cout << r_plus_r << " " << r_plus_g << " " << r_plus_b <<
+//                        " " << r_minus_r << " " << r_minus_g << " " << r_minus_b << endl;
+//                fflush(stdout);
+
+                pixel_result[i * w + j] = Rgba(
+                            uint(r_plus_r + r_minus_r),
+                            uint(r_plus_g + r_minus_g),
+                            uint(r_plus_b + r_minus_b),
+                            0);
+            }
+        }
+    }
+    pixels = pixel_result;
+}
+
+void Image::to_biner(int threshold) {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i * w + j];
+            int grayscale_value = uint(float(temp.r) * 0.298 + float(temp.g) * 0.586 + float(temp.b) * 0.143);
+            if (grayscale_value > threshold) {
+                pixels[i * w + j] = Rgba(255, 255, 255, 0);
+            }
+            else {
+                pixels[i * w + j] = Rgba(0, 0, 0, 0);
+            }
+        }
+    }
+}
+
+void Image::gradient() {
+    Rgba *pixel_result = new Rgba[w * h], xy, x1y, xy1;
+    double r_plus_r, r_minus_r, r_plus_g, r_minus_g, r_plus_b, r_minus_b;
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            if (i  == h - 1 || j == w - 1) {
+                pixel_result[i * w + j] = pixels[i * w + j];
+            }
+            else {
+                xy = pixels[(i * w) + j];
+                x1y = pixels[((i+1) * w) + j];
+                xy1 = pixels[(i * w) + j + 1];
+                r_plus_r = double(x1y.r) - double(xy.r); if (r_plus_r < 0) r_plus_r *= -1;
+                r_plus_g = double(x1y.g) - double(xy.g); if (r_plus_g < 0) r_plus_g *= -1;
+                r_plus_b = double(x1y.b) - double(xy.b); if (r_plus_b < 0) r_plus_b *= -1;
+                r_minus_r = double(xy1.r) - double(xy.r); if (r_minus_r < 0) r_minus_r *= -1;
+                r_minus_g = double(xy1.g) - double(xy.g); if (r_minus_g < 0) r_minus_g *= -1;
+                r_minus_b = double(xy1.b) - double(xy.b); if (r_minus_b < 0) r_minus_b *= -1;
+
+                uint r = uint(int(pow( (pow(r_plus_r, 2) + pow(r_minus_r, 2)) ,0.5)) ); if (r > 255) r = 255;
+                uint g = uint(int(pow( (pow(r_plus_g, 2) + pow(r_minus_g, 2)) ,0.5)) ); if (g > 255) g = 255;
+                uint b = uint(int(pow( (pow(r_plus_b, 2) + pow(r_minus_b, 2)) ,0.5)) ); if (b > 255) b = 255;
+                pixel_result[i * w + j] = Rgba(r, g, b, 0);
+            }
+        }
+    }
+    pixels = pixel_result;
+}
+
 void Image::save(char *filename)
 {
     char *token = filename;

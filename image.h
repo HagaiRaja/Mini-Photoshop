@@ -19,6 +19,8 @@ public:
         { r *= rgba.r, g *= rgba.g, b *= rgba.b; return *this; }
         Rgba& operator += (const Rgba &rgba)
         { r += rgba.r, g += rgba.g, b += rgba.b; return *this; }
+        Rgba& operator -= (const Rgba &rgba)
+        { r -= rgba.r, g -= rgba.g, b -= rgba.b; return *this; }
         unsigned char r, g, b, a;
     };
 
@@ -61,6 +63,9 @@ public:
     void save(char* filename);
     void konvolusi(double kernel[], int dimension, double divident);
     void cross_convolution(double kernel_x[], double kernel_y[], int dimension);
+    void roberts();
+    void to_biner(int threshold);
+    void gradient();
     void update_translate(bool from_ori);
     void reset();
 
