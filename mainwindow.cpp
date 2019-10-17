@@ -675,8 +675,14 @@ void MainWindow::on_actionLog_Transformation_triggered()
         // Adding a widget as a sub window in the Mdi Area
         mdiArea->addSubWindow(widget);
         // Set the window title
-        QString title_info("Gray-level Slicing result - ");
-        widget->setWindowTitle(title_info % fileTitle);
+        QString inverse("Inverse ");
+        QString title_info("Log Transform result - ");
+        if(!dialog.inverse) {
+            widget->setWindowTitle(title_info % fileTitle);
+        } else {
+            widget->setWindowTitle(inverse % title_info % fileTitle);
+        }
+
         // And show the widget
         widget->show();
     }
