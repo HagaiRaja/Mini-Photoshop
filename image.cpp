@@ -939,7 +939,10 @@ void Image::highboost(double alpha, Image& lowpass_image, Image& highpass_image)
     }
 
     for (uint i = 0 ; i < w*h ; i++) {
-        this->pixels[i] = (alpha-1) * this->pixels[i] + highpass_image.pixels[i];
+        this->pixels[i].r = threshold(static_cast<int>(this->pixels[i].r * alpha-1));
+        this->pixels[i].g = threshold(static_cast<int>(this->pixels[i].g * alpha-1));
+        this->pixels[i].b = threshold(static_cast<int>(this->pixels[i].b * alpha-1));
+        this->pixels[i] += highpass_image.pixels[i];
     }
 }
 
