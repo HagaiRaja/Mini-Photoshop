@@ -25,7 +25,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     brightnessslider.cpp \
-    histogram.cpp \
     logtransformdialog.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -38,7 +37,6 @@ SOURCES += \
 
 HEADERS += \
     brightnessslider.h \
-    histogram.h \
     logtransformdialog.h \
         mainwindow.h \
     image.h \
@@ -50,7 +48,6 @@ HEADERS += \
 
 FORMS += \
         brightnessslider.ui \
-    histogram.ui \
     logtransformdialog.ui \
         mainwindow.ui \
     translate_dialog.ui \
