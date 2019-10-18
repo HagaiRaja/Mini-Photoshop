@@ -12,3 +12,7 @@ Histogram::~Histogram()
 {
     delete ui;
 }
+
+void Histogram::drawChart() {
+
+}

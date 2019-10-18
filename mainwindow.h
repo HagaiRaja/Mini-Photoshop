@@ -125,6 +125,7 @@ private slots:
     void on_actionSobel_triggered();
 
     void on_actionPrewitt_triggered();
+
     void on_actionLog_Transformation_triggered();
 
     void on_actionRoberts_triggered();
@@ -132,6 +133,8 @@ private slots:
     void on_actionCanny_triggered();
 
     void on_actionGradient_triggered();
+
+    void on_actionHistogram_triggered();
 
 private:
     Ui::MainWindow *ui;

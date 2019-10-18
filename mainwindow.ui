@@ -32,7 +32,7 @@
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -141,10 +141,17 @@
     <addaction name="menuEdge"/>
     <addaction name="actionGaussian_2"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionHistogram"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuAction"/>
    <addaction name="menuDetection"/>
+   <addaction name="menuTools"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -408,6 +415,16 @@
   <action name="actionLog_Transformation">
    <property name="text">
     <string>Log Transformation</string>
+   </property>
+  </action>
+  <action name="actionShow_Histogram">
+   <property name="text">
+    <string>Histogram</string>
+   </property>
+  </action>
+  <action name="actionHistogram">
+   <property name="text">
+    <string>Histogram</string>
    </property>
   </action>
  </widget>

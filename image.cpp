@@ -799,6 +799,21 @@ void Image::gradient() {
     pixels = pixel_result;
 }
 
+void Image::createHistogram(int& highestCountP, int& cGrayLevel, int& type, int& pixelCount[3][256]) {
+//    highestCountP = 100;
+//    cout << "From Image.cpp = " << highestCountP;
+//    fflush(stdout);
+
+    for (uint i = 0; i < h; i++) {
+        for (uint j = 0; j < w; j++) {
+            // Counting each graylevels
+
+            // Finding highest Pixel
+
+        }
+    }
+}
+
 void Image::save(char *filename)
 {
     char *token = filename;
@@ -864,3 +879,4 @@ void Image::save(char *filename)
         fclose(pgmimg);
     }
 }
+

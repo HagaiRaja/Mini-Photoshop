@@ -13,6 +13,7 @@
 #include "canny_dialog.h"
 #include <cmath>
 #include <QtCharts>
+#include "histogram_dialog.h"
 using namespace std;
 
 const QString picturesFolder = "/home/hagairaja/Documents/Pengcit/miniphotoshop/test";
@@ -1001,4 +1002,40 @@ void MainWindow::on_actionGradient_triggered()
         // And show the widget
         widget->show();
     }
+}
+
+void MainWindow::on_actionHistogram_triggered() {
+    Histogram_dialog dialoghistogram;
+    dialoghistogram.setModal(true);
+    dialoghistogram.setWindowTitle("Histogram");
+
+    picture->createHistogram(dialoghistogram.highestPixelCount, dialoghistogram.currGraylevel, dialoghistogram.type, dialoghistogram.pixelCount);
+
+    dialoghistogram.drawHistogram();
+
+    cout << "From MainWindow = " << dialoghistogram.highestPixelCount;
+    fflush(stdout);
+    if (dialoghistogram.exec() == QDialog::Accepted) //Check if they clicked Ok
+    {
+        // Create a widget that will be a window
+//        QWidget *widget = new QWidget(mdiArea);
+//        // Adding layout to it
+//        QGridLayout *gridLayout = new QGridLayout(widget);
+//        widget->setLayout(gridLayout);
+//        // Adding an label with the picture to the widget
+//        QLabel *label = new QLabel(widget);
+
+//        picture->createHistogram();
+//        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+//        gridLayout->addWidget(label);
+
+//        // Adding a widget as a sub window in the Mdi Area
+//        mdiArea->addSubWindow(widget);
+//        // Set the window title
+//        QString title_info("Contrast Stretching - ");
+//        widget->setWindowTitle(title_info % fileTitle);
+//        // And show the widget
+//        widget->show();
+    }
+
 }
