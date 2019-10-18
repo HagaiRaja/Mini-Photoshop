@@ -39,15 +39,17 @@ void Histogram_dialog::drawHistogram() {
     chart->addSeries(barChartSeries);
     chart->setTitle("Image Histogram");
 
-    QStringList categories;
+//    QStringList categories;
 
-    for (int i = 0; i <256; i++) {
-        std::ostringstream cat;
-        cat << i;
-        categories << cat.str().c_str();
-    }
+//    categories << "0" << "1" << "2" << "3" << "4";
+//    for (int i = 0; i < 256; i++) {
+//        std::ostringstream cat;
+//        cat << i;
+//        categories << cat.str().c_str();
+//    }
     QBarCategoryAxis *axisX = new QBarCategoryAxis();
-    axisX->append(categories);
+//    axisX->append(categories);
+    axisX->setRange("0","255");
     chart->addAxis(axisX, Qt::AlignBottom);
     barChartSeries->attachAxis(axisX);
 
