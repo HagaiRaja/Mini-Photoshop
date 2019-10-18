@@ -15,7 +15,9 @@ public:
     explicit Histogram_dialog(QWidget *parent = nullptr);
     ~Histogram_dialog();
 
-    void drawHistogram();
+    Histogram_dialog& operator =(const Histogram_dialog& h2);
+
+    void drawHistogram(uint& type, uint colour);
 
     uint currGraylevel [3];
     uint highestPixelCount [3];

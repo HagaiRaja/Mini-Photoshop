@@ -1012,7 +1012,12 @@ void MainWindow::on_actionHistogram_triggered() {
     picture->defineImageType(dialoghistogram.type);
     picture->createHistogram(dialoghistogram.highestPixelCount, dialoghistogram.currGraylevel, dialoghistogram.type, dialoghistogram.pixelCount);
 
-    dialoghistogram.drawHistogram();
+    dialoghistogram.drawHistogram(dialoghistogram.type, 0);
+
+    if (dialoghistogram.type == 2) {
+        dialoghistogram.drawHistogram(dialoghistogram.type,1);
+        dialoghistogram.drawHistogram(dialoghistogram.type,2);
+    }
 
     if (dialoghistogram.exec() == QDialog::Accepted) //Check if they clicked Ok
     {

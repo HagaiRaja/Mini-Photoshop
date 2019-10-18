@@ -22,16 +22,29 @@ Histogram_dialog::~Histogram_dialog()
     delete ui;
 }
 
-void Histogram_dialog::drawHistogram() {
+void Histogram_dialog::drawHistogram(uint& type, uint colour) {
+    int c = colour;
+
     QBarSeries *barChartSeries = new QBarSeries();
 
     QBarSet *pixelCountSet = new QBarSet("Pixel Count");
 
+    double total = 0, n = 0;
+    double variance = 0;
     for (int i = 0; i<256; i++) {
-        *pixelCountSet << pixelCount[0][i];
-        cout << "CountSet = " << pixelCount[0][i] << endl;
-        fflush(stdout);
+        *pixelCountSet << pixelCount[c][i];
+
+        total += i * ((double) pixelCount[c][i]);
+        n += double(pixelCount[c][i]);
     }
+
+    double mean = total / n;
+
+    for (int i = 0; i <256; i++) {
+        variance += (((double)i)-mean) * (((double)i) - mean) * ((double) pixelCount[c][i]);
+    }
+
+    double sDeviasi = pow(variance, 0.5);
 
     barChartSeries->append(pixelCountSet);
 
@@ -39,14 +52,6 @@ void Histogram_dialog::drawHistogram() {
     chart->addSeries(barChartSeries);
     chart->setTitle("Image Histogram");
 
-//    QStringList categories;
-
-//    categories << "0" << "1" << "2" << "3" << "4";
-//    for (int i = 0; i < 256; i++) {
-//        std::ostringstream cat;
-//        cat << i;
-//        categories << cat.str().c_str();
-//    }
     QBarCategoryAxis *axisX = new QBarCategoryAxis();
 //    axisX->append(categories);
     axisX->setRange("0","255");
@@ -54,14 +59,33 @@ void Histogram_dialog::drawHistogram() {
     barChartSeries->attachAxis(axisX);
 
     QValueAxis *axisY = new QValueAxis();
-    axisY->setRange(0,highestPixelCount[0]);
+    axisY->setRange(0,highestPixelCount[c]);
     chart->addAxis(axisY, Qt::AlignLeft);
     barChartSeries->attachAxis(axisY);
 
     chart->legend()->setVisible(true);
     chart->legend()->setAlignment(Qt::AlignBottom);
 
-    ui->graphicsView->setChart(chart);
+    if (c == 0) {
+        ui->Hist_r->setChart(chart);
+        ui->ValMean_r->setText(QString(to_string(mean).c_str()));
+        ui->ValVariansi_r->setText(QString(to_string(variance).c_str()));
+        ui->StdrD_r->setText(QString(to_string(sDeviasi).c_str()));
+
+    }
+    else if (c == 1) {
+        ui->Hist_g->setChart(chart);
+        ui->ValMean_g->setText(QString(to_string(mean).c_str()));
+        ui->ValVariansi_g->setText(QString(to_string(variance).c_str()));
+        ui->StdrD_g->setText(QString(to_string(sDeviasi).c_str()));
+    }
+    else {
+        ui->Hist_b->setChart(chart);
+        ui->ValMean_b->setText(QString(to_string(mean).c_str()));
+        ui->ValVariansi_b->setText(QString(to_string(variance).c_str()));
+        ui->StdrD_b->setText(QString(to_string(sDeviasi).c_str()));
+    }
+
 }
 
 void Histogram_dialog::on_buttonBox_accepted()
