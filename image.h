@@ -68,7 +68,8 @@ public:
     void gradient();
     void update_translate(bool from_ori);
     void reset();
-    void createHistogram(int& highestCountP, int& cGrayLevel, int& type, int& pixelCount[3][256]);
+    void createHistogram(uint (&highestCountP) [3], uint (&cGrayLevel) [3], uint type, uint (&pixelCount) [3][256]);
+    void defineImageType(uint& type);
 
 
     unsigned int w, h; // Image resolution

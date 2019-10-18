@@ -799,17 +799,74 @@ void Image::gradient() {
     pixels = pixel_result;
 }
 
-void Image::createHistogram(int& highestCountP, int& cGrayLevel, int& type, int& pixelCount[3][256]) {
-//    highestCountP = 100;
-//    cout << "From Image.cpp = " << highestCountP;
-//    fflush(stdout);
+void Image::defineImageType(uint &type) {
+    bool isBiner = true;
+    bool isGrayscale = true;
+
+    for (uint i = 0; i < h; ++i) {
+        for (uint j = 0; j < w; ++j) {
+            Rgba temp = pixels[i*w + j];
+          if (isBiner) {
+              isBiner = ((temp.r == 0 || temp.r == 255) && (temp.g == 0 || temp.g == 255) && (temp.b == 0 || temp.b == 255));
+          }
+          if (isGrayscale) {
+              isGrayscale = ((temp.r == temp.g) && (temp.r == temp.b) && (temp.g == temp.b));
+          }
+        }
+    }
+
+    if (isBiner) {
+        type = 0;
+    }
+    else if (isGrayscale) {
+        type = 1;
+    }
+    else {
+        type = 2;
+    }
+}
+
+void Image::createHistogram(uint (&highestCountP) [3], uint (&cGrayLevel) [3], uint type, uint (&pixelCount) [3][256]) {
+    for (uint i = 0; i < 3; i++) {
+        cGrayLevel[i] = 0;
+        highestCountP[i] = 0;
+
+        for (uint j = 0; j < 256; j++) {
+            pixelCount[i][j] = 0;
+        }
+    }
 
     for (uint i = 0; i < h; i++) {
         for (uint j = 0; j < w; j++) {
+            Rgba temp = pixels[(i*w) + j];
             // Counting each graylevels
 
-            // Finding highest Pixel
+            pixelCount[0][uint(temp.r)]++;
+            pixelCount[1][uint(temp.g)]++;
+            pixelCount[2][uint(temp.b)]++;
 
+            // Finding highest Pixel Count
+            if (uint(temp.r) > cGrayLevel[0]) {
+                cGrayLevel[0] = uint(temp.r);
+            }
+            if (uint(temp.g) > cGrayLevel[1]) {
+                cGrayLevel[1] = uint(temp.g);
+            }
+            if (uint(temp.b) > cGrayLevel[2]) {
+                cGrayLevel[2] = uint(temp.b);
+            }
+        }
+    }
+
+    for (uint i = 0; i < 256; i++) {
+        if (pixelCount[0][i] > highestCountP[0]) {
+            highestCountP[0] = pixelCount[0][i];
+        }
+        if (pixelCount[1][i] > highestCountP[1]) {
+            highestCountP[1] = pixelCount[1][i];
+        }
+        if (pixelCount[2][i] > highestCountP[2]) {
+            highestCountP[2] = pixelCount[2][i];
         }
     }
 }

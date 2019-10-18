@@ -17,10 +17,10 @@ public:
 
     void drawHistogram();
 
-    int currGraylevel = 0;
-    int highestPixelCount = 0;
-    int pixelCount[3][256];
-    int type; // 0 = Binary, 1 = Grayscale, 2 = Coloured
+    uint currGraylevel [3];
+    uint highestPixelCount [3];
+    uint pixelCount[3][256];
+    uint type = 0; // 0 = Binary, 1 = Grayscale, 2 = Coloured
 
 private slots:
     void on_buttonBox_accepted();

@@ -1009,12 +1009,11 @@ void MainWindow::on_actionHistogram_triggered() {
     dialoghistogram.setModal(true);
     dialoghistogram.setWindowTitle("Histogram");
 
+    picture->defineImageType(dialoghistogram.type);
     picture->createHistogram(dialoghistogram.highestPixelCount, dialoghistogram.currGraylevel, dialoghistogram.type, dialoghistogram.pixelCount);
 
     dialoghistogram.drawHistogram();
 
-    cout << "From MainWindow = " << dialoghistogram.highestPixelCount;
-    fflush(stdout);
     if (dialoghistogram.exec() == QDialog::Accepted) //Check if they clicked Ok
     {
         // Create a widget that will be a window
