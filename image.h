@@ -64,6 +64,9 @@ public:
     void konvolusi(double kernel[], int dimension, double divident);
     void cross_convolution(double kernel_x[], double kernel_y[], int dimension);
     void roberts();
+    void getPlateNumber();
+    void setFixedSize();
+    void medianFilter();
     void to_biner(int threshold);
     void gradient();
     void update_translate(bool from_ori);

@@ -146,6 +146,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionHistogram"/>
+    <addaction name="actionGet_Plate_Number"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -425,6 +426,11 @@
   <action name="actionHistogram">
    <property name="text">
     <string>Histogram</string>
+   </property>
+  </action>
+  <action name="actionGet_Plate_Number">
+   <property name="text">
+    <string>Get Plate Number</string>
    </property>
   </action>
  </widget>

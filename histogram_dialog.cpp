@@ -32,7 +32,14 @@ void Histogram_dialog::drawHistogram(uint& type, uint colour) {
     double total = 0, n = 0;
     double variance = 0;
     for (int i = 0; i<256; i++) {
-        *pixelCountSet << pixelCount[c][i];
+        if (type == 0) {
+            if (i == 0 || i == 255) {
+                *pixelCountSet << pixelCount[c][i];
+            }
+        }
+        else {
+            *pixelCountSet << pixelCount[c][i];
+        }
 
         total += i * ((double) pixelCount[c][i]);
         n += double(pixelCount[c][i]);
@@ -54,7 +61,12 @@ void Histogram_dialog::drawHistogram(uint& type, uint colour) {
 
     QBarCategoryAxis *axisX = new QBarCategoryAxis();
 //    axisX->append(categories);
-    axisX->setRange("0","255");
+    if (type != 0) {
+        axisX->setRange("0","255");
+    }
+    else {
+        axisX->setRange("0","1");
+    }
     chart->addAxis(axisX, Qt::AlignBottom);
     barChartSeries->attachAxis(axisX);
 

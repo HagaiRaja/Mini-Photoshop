@@ -751,6 +751,72 @@ void Image::roberts() {
     pixels = pixel_result;
 }
 
+void Image::setFixedSize() {
+    uint new_h = 200, new_w = 700;
+
+    Rgba *pixel_result = new Rgba[new_w * new_h];
+    uint x,y;
+    double calc_x, calc_y, width = double(w), height = double(h);
+    for (uint i = 0; i < new_h; ++i)
+    {
+        for (uint j = 0; j < new_w; ++j)
+        {
+            calc_x = double(j)/double(new_w) * width;
+            calc_y = double(i)/double(new_h) * height;
+
+            x = uint(calc_x);
+            y = uint(calc_y);
+            pixel_result[i * new_w + j] = pixels[y * w + x];
+        }
+    }
+    pixels = pixel_result;
+    w = new_w;
+    h = new_h;
+}
+
+void Image::getPlateNumber() {
+    double kernel[] = {
+        1, 2, 1,
+        2, 4, 2,
+        1, 2, 1
+    };
+
+    double highPass[] = {
+        -1, -1, -1,
+        -1, 9, -1,
+        -1, -1, -1
+    };
+
+//    this->konvolusi(kernel, 3, 16);
+//    this->konvolusi(highPass, 3, 0);
+
+    // bigger size
+   this->setFixedSize();
+
+    // filter by median
+//    this->medianFilter();
+}
+
+void Image::medianFilter() {
+    Rgba *pixel_result = new Rgba[w * h];
+    Rgba temp;
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            temp = pixels[i * w + j];
+            if (temp.r + temp.g + temp.b > 300) {
+                pixel_result[i * w + j] = Rgba(255,255,255,0);
+            }
+            else {
+                pixel_result[i * w + j] = Rgba(0,0,0,0);
+            }
+        }
+    }
+
+    pixels = pixel_result;
+}
+
 void Image::to_biner(int threshold) {
     for (uint i = 0; i < h; ++i)
     {
