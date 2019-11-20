@@ -1068,3 +1068,50 @@ void MainWindow::on_actionGet_Plate_Number_triggered()
     // And show the widget
     widget->show();
 }
+
+void MainWindow::on_actionGet_Plate_triggered()
+{
+    Canny_dialog dialog_gradient;
+    dialog_gradient.setModal(true);
+    dialog_gradient.setWindowTitle("Pick Threshold");
+
+    if (dialog_gradient.exec() == QDialog::Accepted) //Check if they clicked Ok
+    {
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        widget->setLayout(gridLayout);
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+
+        picture->grayscale();
+        double kernel[] = {
+            1, 2, 1,
+            2, 4, 2,
+            1, 2, 1
+        };
+
+        show_convolution(kernel, 3, 16, "Gaussian");
+        picture->to_biner(dialog_gradient.threshold);
+
+        double kernel2[] = {
+            1, 1, 1,
+            1, 1, 1,
+            1, 1, 1
+        };
+        picture->konvolusi(kernel2, 3, 0);
+
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        gridLayout->addWidget(label);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+        // Set the window title
+        string title = "Segmentation Process (Need CCL) - ";
+        QString title_info(title.c_str());
+        widget->setWindowTitle(title_info % fileTitle);
+        // And show the widget
+        widget->show();
+    }
+}
