@@ -14,8 +14,8 @@ Image::Image(char *filename)
     char *token = filename;
     while (*token != '.')
     {
-        printf("%s\n", token);
-        fflush(stdout);
+//        printf("%s\n", token);
+//        fflush(stdout);
         token = token + 1 * sizeof(*token);
     }
     token = token + 1 * sizeof(*token);
@@ -33,17 +33,17 @@ Image::Image(char *filename)
 
         uint16_t bitsPerPixel = *reinterpret_cast<uint16_t *>(&info[28]);
         uint32_t numColors = *reinterpret_cast<uint32_t *>(&info[46]);
-        printf("%d\n", bitsPerPixel);
-        printf("%d\n", numColors);
-        fflush(stdout);
+//        printf("%d\n", bitsPerPixel);
+//        printf("%d\n", numColors);
+//        fflush(stdout);
         uint colorTableSize = 4 * numColors;
         unsigned char *colorTable = new unsigned char[colorTableSize];
         if (bitsPerPixel <= 8)
         {
             fread(colorTable, sizeof(unsigned char), colorTableSize, f);
         }
-        printf("color table: %s\n", colorTable);
-        fflush(stdout);
+//        printf("color table: %s\n", colorTable);
+//        fflush(stdout);
         uint8_t colorPixelSize = 0;
         if (bitsPerPixel <= 8)
         {
@@ -85,28 +85,28 @@ Image::Image(char *filename)
         char *maxLevelString = reinterpret_cast<char *>(malloc(4 * sizeof(char)));
         uint32_t maxLevel = 0;
         fgets(type, sizeof(type), f);
-        printf("type = %s\n", type);
+//        printf("type = %s\n", type);
 
         fgets(dimensions, sizeof(dimensions), f);
-        printf("dimensions = %s\n", dimensions);
+//        printf("dimensions = %s\n", dimensions);
 
         fgets(maxLevelString, sizeof(maxLevelString), f);
-        printf("maxString = %s\n", maxLevelString);
+//        printf("maxString = %s\n", maxLevelString);
 
         while (*maxLevelString == '\0' || *maxLevelString == '\n')
         {
             fgets(maxLevelString, sizeof(maxLevelString), f);
-            printf("maxString = %s\n", maxLevelString);
+//            printf("maxString = %s\n", maxLevelString);
         }
-        fflush(stdout);
+//        fflush(stdout);
         w = uint(strtol(strtok(dimensions, " "), nullptr, 10));
         h = uint(strtol(strtok(nullptr, " "), nullptr, 10));
         maxLevel = uint(strtol(maxLevelString, nullptr, 10));
-        printf("xMax = %d\n", w);
-        printf("yMax = %d\n", h);
+//        printf("xMax = %d\n", w);
+//        printf("yMax = %d\n", h);
 
-        printf("maxLevel = %d\n", maxLevel);
-        fflush(stdout);
+//        printf("maxLevel = %d\n", maxLevel);
+//        fflush(stdout);
 
         uint size = 3 * w * h;
         pixels = new Rgba[w * h];
@@ -234,6 +234,26 @@ Image::Image(char *filename)
         cout << "Unable to open file";
 }
 
+Image::Image(Image* source, uint top, uint bottom, uint left, uint right) {
+    w = right - left;
+    h = bottom - top;
+
+//    cout << top << " " << bottom << " " << left << " " << right << " " << endl;
+//    fflush(stdout);
+    pixels = new Rgba[w * h];
+    pixels_ori = new Rgba[w * h];
+    int height = int(h);
+    int width = int(w);
+    for (int i = 0; i < height; ++i)
+    {
+        for (int j = 0; j < width; ++j)
+        {
+            pixels[i * width + j] = source->pixels[((i + top) * source->w) + (j + left)];
+            pixels_ori[i * width + j] = source->pixels[((i + top) * source->w) + (j + left)];
+        }
+    }
+}
+
 QImage Image::getImage()
 {
     QImage img(w, h, QImage::Format_RGBA8888);
@@ -272,7 +292,24 @@ void Image::grayscale()
         {
             Rgba temp = pixels[i * w + j];
             uint grayscale_value = uint(float(temp.r) * 0.298 + float(temp.g) * 0.586 + float(temp.b) * 0.143);
+            if (grayscale_value > 255) grayscale_value = 255;
             pixels[i * w + j] = Rgba(grayscale_value, grayscale_value, grayscale_value, 0);
+        }
+    }
+}
+
+void Image::biner() {
+    this->grayscale();
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            if (pixels[i * w + j].r > 124) {
+                pixels[i * w + j] = Rgba(255, 255, 255, 0);
+            }
+            else {
+                pixels[i * w + j] = Rgba(0, 0, 0, 0);
+            }
         }
     }
 }
@@ -619,8 +656,8 @@ void Image::contrast_stretching(int x1, int y1, int x2, int y2) {
         if (temp < 0) temp = 0;
         if (temp > 255) temp = 255;
         transform_table[i] = temp;
-        cout << i << " " << temp << endl;
-        fflush(stdout);
+//        cout << i << " " << temp << endl;
+//        fflush(stdout);
     }
 
     // updating rgb
@@ -751,8 +788,12 @@ void Image::roberts() {
     pixels = pixel_result;
 }
 
+const uint height_lines = 70;
+
 void Image::setFixedSize() {
     uint new_h = 200, new_w = 700;
+
+    this->grayscale();
 
     Rgba *pixel_result = new Rgba[new_w * new_h];
     uint x,y;
@@ -767,6 +808,7 @@ void Image::setFixedSize() {
             x = uint(calc_x);
             y = uint(calc_y);
             pixel_result[i * new_w + j] = pixels[y * w + x];
+//            if (i == height_lines) pixel_result[i * new_w + j] = Rgba(0,255,0,0);
         }
     }
     pixels = pixel_result;
@@ -783,18 +825,162 @@ void Image::getPlateNumber() {
 
     double highPass[] = {
         -1, -1, -1,
-        -1, 9, -1,
+        -1, 8, -1,
         -1, -1, -1
     };
 
-//    this->konvolusi(kernel, 3, 16);
-//    this->konvolusi(highPass, 3, 0);
 
     // bigger size
    this->setFixedSize();
+//    this->konvolusi(highPass, 3, 0);
+    this->getChar();
+//    this->konvolusi(kernel, 3, 16);
 
     // filter by median
 //    this->medianFilter();
+}
+
+void Image::getChar() {
+    uint start = pixels[height_lines*w].r;
+    uint j = 1;
+    uint lastWordPos = 1;
+    int numberOfWord = this->plateString.length();
+    while (j < w) {
+        if (start - pixels[height_lines*w + j].r > 10 || pixels[height_lines*w + j].r - start > 10) {
+            j = this->growChar(j);
+            if (numberOfWord != this->plateString.length()) {
+                numberOfWord = this->plateString.length();
+                if (j - lastWordPos > 150) {
+                    this->plateString += " ";
+                }
+                lastWordPos = j;
+            }
+            start = pixels[height_lines*w + j].r;
+        }
+//        printf("%u\n", pixels[height_lines*w + j].r);
+//        fflush(stdout);
+        j++;
+    }
+}
+
+uint Image::growChar(uint start) {
+    uint top = height_lines - 1, bottom = height_lines + 1, left = start - 1, right = start + 1;
+    bool round = true;
+    while (round && top > 0 && bottom < 200 && left > 0 && right < 700) {
+        round = false;
+        // left to right - top check
+        for (uint i = left; i <= right; i++) {
+            if (pixels[top*w + i].r > 124) {
+                round = true;
+                top -= 1;
+                break;
+            }
+        }
+        // left to right - bottom check
+        for (uint i = left; i <= right; i++) {
+            if (pixels[bottom*w + i].r > 124) {
+                round = true;
+                bottom += 1;
+                break;
+            }
+        }
+        // top to bottom - left check
+        for (uint i = top; i <= bottom; i++) {
+            if (pixels[i*w + left].g > 124 && i != height_lines) {
+                round = true;
+                left -= 1;
+                break;
+            }
+        }
+        // top to bottom - right check
+        for (uint i = top; i <= bottom; i++) {
+            if (pixels[i*w + right].g > 124 && i != height_lines) {
+                round = true;
+                right += 1;
+                break;
+            }
+        }
+    }
+
+    if (!(bottom > 170 || top < 10 || left < 5 || right > 695 || bottom - top < 5 || right - left < 5)) {
+        for (uint i = top; i <= bottom; ++i)
+        {
+            for (uint j = left; j <= right; ++j)
+            {
+                if (i == top || i == bottom || j == left || j == right) {
+                    pixels[i * w + j] = Rgba(0,255,0,0);
+                }
+            }
+        }
+
+        this->addChar(top, bottom, left, right);
+//        cout << "woi" << endl;
+//        fflush(stdout);
+    }
+    return right + 1;
+}
+
+void Image::addChar(uint top, uint bottom, uint left, uint right) {
+    Image subImage(this, top, bottom, left, right);
+
+    subImage.biner();
+    subImage.negatify();
+    subImage.biner();
+    char listImage[36] = {
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+        'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+        'U', 'V', 'W', 'X', 'Y', 'Z',
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    };
+
+    double best_accuracy = 0;
+    int position = 0;
+
+    subImage.save("/home/hagairaja/Documents/Pengcit/miniphotoshop/test/dude.ppm");
+
+    for (int i = 0; i < 36; i++) {
+        string filename = "/home/hagairaja/Documents/Pengcit/miniphotoshop/test/plate/";
+        filename += listImage[i];
+        filename += ".ppm";
+        char *cstr = new char[filename.length() + 1];
+        strcpy(cstr, filename.c_str());
+        // do stuff
+        Image comparison(cstr);
+        comparison.biner();
+        double temp_accuracy = comparison.compare(&subImage);
+
+        if (temp_accuracy > best_accuracy) {
+            best_accuracy = temp_accuracy;
+            position = i;
+        }
+        cout << listImage[i] << " " << temp_accuracy << endl;
+    }
+
+    plateString += listImage[position];
+    cout << listImage[position] << endl;
+    fflush(stdout);
+}
+
+double Image::compare(Image* anotherImage) {
+    int correct = 0;
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            double x = (double(i)/double(h)) * anotherImage->h;
+            double y = (double(j)/double(w)) * anotherImage->w;
+//            cout << uint(x) << " " << uint(y) << " " << anotherImage->h << " " << anotherImage->w <<
+//                 " " << endl;
+//            fflush(stdout);
+            Rgba temp = anotherImage->pixels[uint(x) * anotherImage->w + uint(y)];
+            if (this->pixels[i * w + j].r == temp.r) {
+                correct += 1;
+            }
+        }
+    }
+
+    double result = correct/(double(w) * double(h));
+    return result;
 }
 
 void Image::medianFilter() {
@@ -942,8 +1128,8 @@ void Image::save(char *filename)
     char *token = filename;
     while (*token != '.')
     {
-        printf("%s\n", token);
-        fflush(stdout);
+//        printf("%s\n", token);
+//        fflush(stdout);
         token = token + 1 * sizeof(*token);
     }
     token = token + 1 * sizeof(*token);

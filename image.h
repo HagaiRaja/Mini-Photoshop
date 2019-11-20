@@ -3,6 +3,8 @@
 
 #define NULL 0
 #include <QImage>
+#include <iostream>
+using namespace std;
 
 class Image
 {
@@ -35,6 +37,7 @@ public:
     }
 
     Image(char* filename);
+    Image(Image* source, uint top, uint bottom, uint left, uint right);
 
     const Rgba& operator [] (const unsigned int &i) const
     { return pixels[i]; }
@@ -46,6 +49,7 @@ public:
     QImage getImage();
     void negatify();
     void grayscale();
+    void biner();
     void flip_vertical();
     void flip_horizontal();
     void rotate_90_clockwise();
@@ -65,7 +69,11 @@ public:
     void cross_convolution(double kernel_x[], double kernel_y[], int dimension);
     void roberts();
     void getPlateNumber();
+    void addChar(uint top, uint bottom, uint left, uint right);
     void setFixedSize();
+    void getChar();
+    uint growChar(uint start);
+    double compare(Image* anotherImage);
     void medianFilter();
     void to_biner(int threshold);
     void gradient();
@@ -79,6 +87,7 @@ public:
     int translate_x = 0, translate_y = 0;
     Rgba *pixels, *pixels_ori; // 1D array of pixels
     static const Rgba kBlack, kWhite, kRed, kGreen, kBlue; // Preset colors
+    string plateString = "";
 
 private:
 

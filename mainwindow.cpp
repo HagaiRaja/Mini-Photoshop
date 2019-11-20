@@ -1061,7 +1061,8 @@ void MainWindow::on_actionGet_Plate_Number_triggered()
     // Adding a widget as a sub window in the Mdi Area
     mdiArea->addSubWindow(widget);
     // Set the window title
-    string title = "Convolution Roberts - ";
+    string title = picture->plateString;
+    title += " - ";
     QString title_info(title.c_str());
     widget->setWindowTitle(title_info % fileTitle);
     // And show the widget
