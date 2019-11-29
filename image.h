@@ -81,7 +81,25 @@ public:
     void reset();
     void createHistogram(uint (&highestCountP) [3], uint (&cGrayLevel) [3], uint type, uint (&pixelCount) [3][256]);
     void defineImageType(uint& type);
-
+    struct point{
+        point(uint _X, uint _Y):  X(_X), Y(_Y) {}
+        uint X;
+        uint Y;
+        bool operator==(point p2){return X == p2.X && Y == p2.Y;};
+    };
+    struct rectangle{
+        rectangle(point p1, point p2, point p3, point p4): TopLeft(p1), TopRight(p2), BottomLeft(p3), BottomRight(p4) {}
+        point TopLeft;
+        point TopRight;
+        point BottomLeft;
+        point BottomRight;
+        bool operator==(rectangle r2){return TopLeft == r2.TopLeft && TopRight == r2.TopRight && BottomLeft == r2.BottomLeft && BottomRight == r2.BottomRight;};
+    };
+    void CCL_expandCoordinates(int i, int j, int current_label, int * label_arr);
+    void searchCandidateRectangle(int *label_arr, int totalComponent, vector<rectangle> &rects);
+    void filterRectangles(vector<rectangle> &candidateRectangles);
+    void CCL_get();
+    void drawRectangles(vector<rectangle> rects);
 
     unsigned int w, h; // Image resolution
     int translate_x = 0, translate_y = 0;

@@ -840,6 +840,123 @@ void Image::getPlateNumber() {
 //    this->medianFilter();
 }
 
+
+void Image::CCL_expandCoordinates(int i, int j, int current_label, int * label_arr) {
+    // direction vectors
+    const int di[] = {+1, 0, -1, 0};
+    const int dj[] = {0, +1, 0, -1};
+
+    if (i < 0 || i == h) return;
+    if (j < 0 || j == w) return; // out of bounds
+    if (label_arr[i*w+j] || !pixels[i*w+j].r) return; // already labeled or not marked with 1 in m
+
+  // mark the current cell
+  label_arr[i*w+j] = current_label;
+
+  // recursively mark the neighbors
+  for (int direction = 0; direction < 4; ++direction)
+    CCL_expandCoordinates(i + di[direction], j + dj[direction], current_label, label_arr);
+}
+
+void Image::searchCandidateRectangle(int *label_arr, int totalComponent, vector<rectangle> &rects) {
+    for(uint n = 1 ; n < totalComponent ; n++) {
+        uint leftmost = 0;
+        uint rightmost = 0;
+        uint topmost = 0;
+        uint bottommost = 0;
+        cout<<n<<endl;
+
+
+        bool start = false;
+        bool isBottommost=false;
+        for (uint i = 0 ; i < h && !isBottommost ; i++) {
+            isBottommost = true;
+
+            for (uint j = 0 ; j < w ; j++) {
+                if (!start && label_arr[i*w+j] == n) {
+                    start = true;
+                    topmost = i;
+                    leftmost = j;
+                }
+
+                if(start) {
+                    if(leftmost > j && label_arr[i*w+j] == n) {
+                        leftmost = j;
+                    }
+                    if(rightmost < j && label_arr[i*w+j] == n) {
+                        rightmost = j;
+                    }
+                    if(isBottommost && label_arr[i*w+j] == n) {
+                        isBottommost = false;
+                    }
+                }
+
+            }
+            if(isBottommost && !start) {
+                isBottommost = false;
+            }
+            bottommost = i;
+        }
+
+        cout << topmost << " " << leftmost << " " << rightmost << " " << bottommost << endl;
+        rects.push_back(rectangle(point(leftmost,topmost),point(rightmost, topmost), point(leftmost,bottommost), point(rightmost,bottommost)));
+    }
+}
+
+void Image::CCL_get() {
+    vector<rectangle> candidateRectangles;
+    int *label = new int[w*h]();
+
+    int component = 0;
+    for (int i = 0; i < h; ++i)
+        for (int j = 0; j < w; ++j)
+            if (!label[i*w+j] && pixels[i*w+j].r) CCL_expandCoordinates(i, j, ++component, label);
+    for (int i = 0; i < h; ++i) {
+        for (int j = 0; j < w; ++j)
+            cout<<label[i*w+j];
+        cout <<endl;
+    }
+    searchCandidateRectangle(label, component, candidateRectangles);
+    filterRectangles(candidateRectangles);
+    drawRectangles(candidateRectangles);
+}
+
+void Image::filterRectangles(vector<rectangle> &candidateRectangles) {
+    for (uint i = 0 ; i < candidateRectangles.size() ;) {
+        rectangle rect = candidateRectangles[i];
+        double ratio = (rect.TopRight.X - rect.TopLeft.X) / (double)(rect.BottomLeft.Y - rect.TopLeft.Y);
+        cout << ratio << endl;
+        if(ratio <2.4 || ratio > 2.6) {
+            cout << "AAAAAA";
+            candidateRectangles.erase(candidateRectangles.begin() + i);
+        } else {
+            i++;
+        }
+    }
+}
+
+void Image::drawRectangles(vector<rectangle> rects) {
+    for(rectangle rect : rects){
+        uint i = rect.TopLeft.Y;
+        uint j = rect.TopLeft.X;
+
+        uint leftmost = rect.TopLeft.X;
+        uint topmost = rect.TopLeft.Y;
+        uint bottommost = rect.BottomRight.Y;
+        uint rightmost = rect.BottomRight.X;
+        while (j < rightmost) {
+            pixels[topmost*w+j] = Rgba(0,255,0,0);
+            pixels[bottommost*w+j] = Rgba(0,255,0,0);
+            j++;
+        }
+        while (i < bottommost) {
+            pixels[i*w+leftmost] = Rgba(0,255,0,0);
+            pixels[i*w+rightmost] = Rgba(0,255,0,0);
+            i++;
+        }
+    }
+}
+
 void Image::getChar() {
     uint start = pixels[height_lines*w].r;
     uint j = 1;
@@ -936,10 +1053,10 @@ void Image::addChar(uint top, uint bottom, uint left, uint right) {
     double best_accuracy = 0;
     int position = 0;
 
-    subImage.save("/home/hagairaja/Documents/Pengcit/miniphotoshop/test/dude.ppm");
+    subImage.save("/dude.ppm");
 
     for (int i = 0; i < 36; i++) {
-        string filename = "/home/hagairaja/Documents/Pengcit/miniphotoshop/test/plate/";
+        string filename = "";
         filename += listImage[i];
         filename += ".ppm";
         char *cstr = new char[filename.length() + 1];

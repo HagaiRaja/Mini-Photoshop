@@ -1102,6 +1102,8 @@ void MainWindow::on_actionGet_Plate_triggered()
         };
         picture->konvolusi(kernel2, 3, 0);
 
+        picture->CCL_get();
+
         label->setPixmap(QPixmap::fromImage(picture->getImage()));
         gridLayout->addWidget(label);
 
