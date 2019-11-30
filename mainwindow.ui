@@ -89,6 +89,7 @@
      <addaction name="actionAND"/>
      <addaction name="actionNOT"/>
      <addaction name="actionADD"/>
+     <addaction name="actionXOR"/>
     </widget>
     <widget class="QMenu" name="menuTransform_2">
      <property name="title">
@@ -148,6 +149,8 @@
     <addaction name="actionHistogram"/>
     <addaction name="actionGet_Plate_Number"/>
     <addaction name="actionGet_Plate"/>
+    <addaction name="actionBinary_Segmentation"/>
+    <addaction name="actionAdd_Boundary"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -437,6 +440,21 @@
   <action name="actionGet_Plate">
    <property name="text">
     <string>Get Plate</string>
+   </property>
+  </action>
+  <action name="actionBinary_Segmentation">
+   <property name="text">
+    <string>Binary Segmentation</string>
+   </property>
+  </action>
+  <action name="actionAdd_Boundary">
+   <property name="text">
+    <string>Add Boundary</string>
+   </property>
+  </action>
+  <action name="actionXOR">
+   <property name="text">
+    <string>XOR</string>
    </property>
   </action>
  </widget>

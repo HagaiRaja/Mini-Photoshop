@@ -230,6 +230,81 @@ Image::Image(char *filename)
             cout << "Unable to open file";
         }
     }
+    else if (!strcmp(extension, "pbm")) {
+        // READ PBM
+        char *type = new char[2];
+        FILE *myfile = fopen(filename, "rb");
+
+        fgets(type, sizeof(type), myfile);
+        cout << type;
+
+        char *dimension = new char[15];
+        fgets(dimension, sizeof(dimension), myfile);
+        int width = atoi(strtok(dimension, " "));
+        int height = atoi(strtok(NULL, " "));
+
+        w = uint(width);
+        h = uint(height);
+        uint size = width * height;
+        pixels = new Rgba[w * h];
+
+        if (!strcmp(type, "P1\n")) {
+            cout << width << " " << height << "Test";
+            fflush(stdout);
+
+            int temp;
+            for (int i = 0; i < height; ++i)
+            {
+                for (int j = 0; j < width; ++j)
+                {
+                    fscanf(myfile, "%d", &temp);
+                    cout << temp;
+                    if (temp == 0) {
+                        temp = 255;
+                    }
+                    else {
+                        temp = 0;
+                    }
+                    fflush(stdout);
+                    uint color = uint(double(temp));
+                    pixels[i * width + j] = Rgba(color, color, color, 0);
+                }
+            }
+        }
+        else if (!strcmp(type, "P4\n")) {
+            char* type = new char[2];
+            FILE* myfile = fopen(filename, "rb");
+            fgets(type, sizeof(type), myfile);
+            char* dimension = new char [10];
+            fgets(dimension, sizeof(dimension) + 1, myfile);
+            int width = atoi(strtok(dimension, " "));
+            int height = atoi(strtok(NULL, " "));
+            uint size = width * height;
+            w = uint(width);
+            h = uint(height);
+            unsigned char *data = new unsigned char[size];
+            fread(data, sizeof(unsigned char), size, myfile);
+            unsigned char temp, gas;
+            unsigned char mask;
+            mask = 1<<7;
+            pixels = new Rgba[w * h];
+            for (int i = 0; i < height * width / 8; i++) {
+                temp = data[i];
+                for (int k = 0; k < 8; k++) {
+                    gas = (temp & (mask >> k)) != 0;
+                    pixels[i*8 + k] = Rgba (0,0,0,0);
+                    if (gas != 0) {
+                        pixels[i*8 + k] = Rgba (255,255,255,0);
+                    }
+                }
+            }
+
+        }
+        else {
+            cout << "Unable to open file";
+        }
+
+    }
     else
         cout << "Unable to open file";
 }
@@ -441,6 +516,25 @@ void Image::operation_bool(Image *secondImage, bool OR)
                     temp.b & temp_second.b,
                     temp.a & temp_second.a);
             }
+            pixels[i * w + j] = bool_result;
+        }
+    }
+}
+
+void Image::operation_XOR(Image *secondImage) {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i * w + j];
+            Rgba temp_second = secondImage->pixels[i * w + j];
+            Rgba bool_result;
+            bool_result = Rgba(
+                temp.r ^ temp_second.r,
+                temp.g ^ temp_second.g,
+                temp.b ^ temp_second.b,
+                temp.a ^ temp_second.a);
+
             pixels[i * w + j] = bool_result;
         }
     }
@@ -1306,3 +1400,30 @@ void Image::save(char *filename)
     }
 }
 
+void Image::backgroundFill(uint x, uint y, uint tColor, uint cColor) {
+   if(pixels[y*w + x].r != tColor)
+      return;
+
+   pixels[y*w + x] = Rgba(cColor, cColor, cColor, 0);
+
+   if ( x < w-1 ) { backgroundFill(x + 1, y, tColor, cColor); }
+   if ( x != 0 ) { backgroundFill(x - 1, y, tColor, cColor); }
+   if ( y < h-1 ) { backgroundFill(x, y + 1, tColor, cColor); }
+   if ( y != 0 ) { backgroundFill(x, y - 1, tColor, cColor); }
+
+   return;
+}
+
+void Image::addBoundary(Image *secondImage) {
+    for (uint i = 0; i < h; ++i)
+    {
+        for (uint j = 0; j < w; ++j)
+        {
+            Rgba temp = pixels[i * w + j];
+
+            if (temp.r == 255) {
+                secondImage->pixels[i * w + j] = Rgba (0, 255, 0, 0);
+            }
+        }
+    }
+}

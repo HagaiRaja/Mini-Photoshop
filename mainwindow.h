@@ -140,6 +140,12 @@ private slots:
 
     void on_actionGet_Plate_triggered();
 
+    void on_actionBinary_Segmentation_triggered();
+
+    void on_actionAdd_Boundary_triggered();
+
+    void on_actionXOR_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMdiArea *mdiArea; // Area in which windows will be added

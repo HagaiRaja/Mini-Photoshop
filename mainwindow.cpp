@@ -384,6 +384,31 @@ void MainWindow::on_actionNOT_triggered()
     widget->show();
 }
 
+void MainWindow::on_actionXOR_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    Image *second_picture = this->open_second_image();
+
+    picture->operation_XOR(second_picture);
+    label->setPixmap(QPixmap::fromImage(picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QString title_info("XOR operation - ");
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
 void MainWindow::on_actionADD_triggered()
 {
     // Create a widget that will be a window
@@ -1091,10 +1116,10 @@ void MainWindow::on_actionGet_Plate_triggered()
             2, 4, 2,
             1, 2, 1
         };
-
         show_convolution(kernel, 3, 16, "Gaussian");
         picture->to_biner(dialog_gradient.threshold);
-
+        // If mobil putih, uncomment
+//        picture->negatify();
         double kernel2[] = {
             1, 1, 1,
             1, 1, 1,
@@ -1117,3 +1142,65 @@ void MainWindow::on_actionGet_Plate_triggered()
         widget->show();
     }
 }
+
+void MainWindow::on_actionBinary_Segmentation_triggered()
+{
+    Canny_dialog dialog_segmentation;
+    dialog_segmentation.setModal(true);
+    dialog_segmentation.setWindowTitle("Pick Threshold");
+
+    if (dialog_segmentation.exec() == QDialog::Accepted) //Check if they clicked Ok
+    {
+        // Create a widget that will be a window
+        QWidget *widget = new QWidget(mdiArea);
+        // Adding layout to it
+        QGridLayout *gridLayout = new QGridLayout(widget);
+        widget->setLayout(gridLayout);
+        // Adding an label with the picture to the widget
+        QLabel *label = new QLabel(widget);
+
+        picture->grayscale();
+        picture->to_biner(dialog_segmentation.threshold);
+        picture->backgroundFill(0,0,0,255);
+//        picture->backgroundFill(picture->w-2,picture->h-2,0,255);
+
+        label->setPixmap(QPixmap::fromImage(picture->getImage()));
+        gridLayout->addWidget(label);
+
+        // Adding a widget as a sub window in the Mdi Area
+        mdiArea->addSubWindow(widget);
+        // Set the window title
+        string title = "Binary Segmentation";
+        QString title_info(title.c_str());
+        widget->setWindowTitle(title_info % fileTitle);
+        // And show the widget
+        widget->show();
+    }
+}
+
+void MainWindow::on_actionAdd_Boundary_triggered()
+{
+    // Create a widget that will be a window
+    QWidget *widget = new QWidget(mdiArea);
+    // Adding layout to it
+    QGridLayout *gridLayout = new QGridLayout(widget);
+    widget->setLayout(gridLayout);
+    // Adding an label with the picture to the widget
+    QLabel *label = new QLabel(widget);
+
+    Image *second_picture = this->open_second_image();
+
+    picture->addBoundary(second_picture);
+    label->setPixmap(QPixmap::fromImage(second_picture->getImage()));
+    gridLayout->addWidget(label);
+
+    // Adding a widget as a sub window in the Mdi Area
+    mdiArea->addSubWindow(widget);
+    // Set the window title
+    QString title_info("Added Binary Boundaries - ");
+    widget->setWindowTitle(title_info % fileTitle);
+    // And show the widget
+    widget->show();
+}
+
+

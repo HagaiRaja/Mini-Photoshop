@@ -56,6 +56,7 @@ public:
     void rotate_90_c_clockwise();
     void change_brightness(int value);
     void operation_bool(Image *secondImage, bool OR);
+    void operation_XOR(Image *secondImage);
     void operation_arithmetic(Image *secondImage);
     void operation_not();
     void transform_gamma(double gamma, int constant);
@@ -100,6 +101,8 @@ public:
     void filterRectangles(vector<rectangle> &candidateRectangles);
     void CCL_get();
     void drawRectangles(vector<rectangle> rects);
+    void backgroundFill(uint x, uint y, uint tColor, uint cColor);
+    void addBoundary(Image *secondImage);
 
     unsigned int w, h; // Image resolution
     int translate_x = 0, translate_y = 0;
