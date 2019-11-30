@@ -816,6 +816,95 @@ void Image::setFixedSize() {
     h = new_h;
 }
 
+// Zhang-Suen thinning algorithm
+void Image::thinning() {
+    int changed_pixels = 0;
+    Rgba * temp_a = new Rgba[w*h];
+    Rgba * temp_b = new Rgba[w*h];
+    for(int i = 0 ; i < w * h ; i++) temp_a[i] = pixels[i];
+
+    // First iteration
+    do {
+        changed_pixels = 0;
+        // Step 1
+        for(int i = 0 ; i < w * h ; i++) temp_b[i] = temp_a[i];
+        for (int i = 1 ; i < h - 1 ; i++) {
+            for(int j = 1 ; j < w - 1 ; j++) {
+                if(temp_a[i*w+j].r) {
+                    int black_count = 0;
+                    for(int k = -1 ; k <= 1 ; k++)
+                        for (int l = -1 ; l <= 1 ; l++)
+                            if(temp_a[(i+k)*w+(j+l)].r == 0) black_count++;
+                    if(black_count >=2 && black_count <= 6) {
+                        int transitions = 0;
+                        int y[9];
+                        y[0]=temp_a[(i-1)*w+j].r;
+                        y[1]=temp_a[(i-1)*w+(j+1)].r;
+                        y[2]=temp_a[(i)*w+(j+1)].r;
+                        y[3]=temp_a[(i+1)*w+(j+1)].r;
+                        y[4]=temp_a[(i+1)*w+(j)].r;
+                        y[5]=temp_a[(i+1)*w+(j-1)].r;
+                        y[6]=temp_a[(i)*w+(j-1)].r;
+                        y[7]=temp_a[(i-1)*w+(j-1)].r;
+                        y[8]=temp_a[(i-1)*w+j].r;
+                        for(int m = 0 ; m < 8 ; m++) {
+                            if(y[m] == 0 && y[m+1])
+                                transitions++;
+                        }
+                        if (transitions == 1 &&
+                            (y[0] || y[2] || y[6]) &&
+                             (y[0] || y[4] || y[6])) {
+                            temp_b[i*w+j].r = 0;
+                            temp_b[i*w+j].g = 0;
+                            temp_b[i*w+j].b = 0;
+                            changed_pixels++;
+                        }
+                    }
+                }
+            }
+        }
+        // Step 2
+        for(int i = 0 ; i < w * h ; i++) temp_a[i] = temp_b[i];
+        for (int i = 1 ; i < h - 1 ; i++) {
+            for(int j = 1 ; j < w - 1 ; j++) {
+                if(temp_b[i*w+j].r) {
+                    int black_count = 0;
+                    for(int k = -1 ; k <= 1 ; k++)
+                        for (int l = -1 ; l <= 1 ; l++)
+                            if(temp_b[(i+k)*w+(j+l)].r == 0) black_count++;
+                    if(black_count >=2 && black_count <= 6) {
+                        int transitions = 0;
+                        int y[9];
+                        y[0]=temp_b[(i-1)*w+j].r;
+                        y[1]=temp_b[(i-1)*w+(j+1)].r;
+                        y[2]=temp_b[(i)*w+(j+1)].r;
+                        y[3]=temp_b[(i+1)*w+(j+1)].r;
+                        y[4]=temp_b[(i+1)*w+(j)].r;
+                        y[5]=temp_b[(i+1)*w+(j-1)].r;
+                        y[6]=temp_b[(i)*w+(j-1)].r;
+                        y[7]=temp_b[(i-1)*w+(j-1)].r;
+                        y[8]=temp_b[(i-1)*w+j].r;
+                        for(int m = 0 ; m < 8 ; m++) {
+                            if(y[m] ==0 && y[m+1])
+                                transitions++;
+                        }
+                        if (transitions == 1 &&
+                            (y[0] || y[2] || y[4]) &&
+                             (y[0] || y[4] || y[6])) {
+                            temp_a[i*w+j].r = 0;
+                            temp_a[i*w+j].g = 0;
+                            temp_a[i*w+j].b = 0;
+                            changed_pixels++;
+                        }
+                    }
+                }
+            }
+        }
+    } while(changed_pixels > 0);
+
+    for (int i = 0 ; i < w * h ; i++) pixels[i] = temp_a[i];
+}
+
 void Image::getPlateNumber() {
     double kernel[] = {
         1, 2, 1,

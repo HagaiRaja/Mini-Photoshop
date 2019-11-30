@@ -140,6 +140,8 @@ private slots:
 
     void on_actionGet_Plate_triggered();
 
+    void on_actionThinning_triggered();
+
 private:
     Ui::MainWindow *ui;
     QMdiArea *mdiArea; // Area in which windows will be added

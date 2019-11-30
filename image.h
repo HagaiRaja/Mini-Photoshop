@@ -23,6 +23,7 @@ public:
         { r += rgba.r, g += rgba.g, b += rgba.b; return *this; }
         Rgba& operator -= (const Rgba &rgba)
         { r -= rgba.r, g -= rgba.g, b -= rgba.b; return *this; }
+        Rgba& operator= (const Rgba &rgba) {r = rgba.r; g = rgba.g; b = rgba.b; a = rgba.a; return *this;}
         unsigned char r, g, b, a;
     };
 
@@ -68,6 +69,7 @@ public:
     void konvolusi(double kernel[], int dimension, double divident);
     void cross_convolution(double kernel_x[], double kernel_y[], int dimension);
     void roberts();
+    void thinning();
     void getPlateNumber();
     void addChar(uint top, uint bottom, uint left, uint right);
     void setFixedSize();
