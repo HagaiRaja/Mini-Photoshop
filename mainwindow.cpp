@@ -1127,6 +1127,7 @@ void MainWindow::on_actionThinning_triggered() {
     // Adding an label with the picture to the widget
     QLabel *label = new QLabel(widget);
 
+    picture->contrast_stretching(128,0,128,255);
     picture->thinning();
     label->setPixmap(QPixmap::fromImage(picture->getImage()));
     gridLayout->addWidget(label);

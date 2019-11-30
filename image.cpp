@@ -852,8 +852,8 @@ void Image::thinning() {
                                 transitions++;
                         }
                         if (transitions == 1 &&
-                            (y[0] || y[2] || y[6]) &&
-                             (y[0] || y[4] || y[6])) {
+                            (y[0] || y[2] || y[4]) &&
+                             (y[2] || y[4] || y[6])) {
                             temp_b[i*w+j].r = 0;
                             temp_b[i*w+j].g = 0;
                             temp_b[i*w+j].b = 0;
@@ -889,7 +889,7 @@ void Image::thinning() {
                                 transitions++;
                         }
                         if (transitions == 1 &&
-                            (y[0] || y[2] || y[4]) &&
+                            (y[0] || y[2] || y[6]) &&
                              (y[0] || y[4] || y[6])) {
                             temp_a[i*w+j].r = 0;
                             temp_a[i*w+j].g = 0;
